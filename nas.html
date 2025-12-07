@@ -6,7 +6,8 @@
   <style>
     body { font-family: 'Segoe UI', Arial, sans-serif; margin:0; background:#f4f6f9; }
     .topbar {
-      background:#34495e; color:white; padding:15px; display:flex; justify-content:space-between; align-items:center;
+      background:#34495e; color:white; padding:15px;
+      display:flex; justify-content:space-between; align-items:center;
     }
     .topbar h1 { margin:0; font-size:1.5em; }
     .btn.logout {
@@ -15,10 +16,22 @@
     }
     .btn.logout:hover { background:#c0392b; }
     .container { padding:20px; }
-    .storage {
-      margin:20px 0; background:#fff; padding:20px; border-radius:10px; box-shadow:0 2px 8px rgba(0,0,0,0.1);
+    h2 { border-bottom:2px solid #3498db; padding-bottom:5px; }
+    ul { list-style:none; padding:0; }
+    li { margin:8px 0; }
+    a {
+      display:inline-block; padding:8px 12px;
+      background:#3498db; color:white; text-decoration:none;
+      border-radius:6px;
     }
-    .bar { width:100%; height:20px; background:#ecf0f1; border-radius:10px; overflow:hidden; margin:10px 0; }
+    a:hover { background:#2980b9; }
+    .storage {
+      margin:20px 0; background:#fff; padding:20px;
+      border-radius:10px; box-shadow:0 2px 8px rgba(0,0,0,0.1);
+    }
+    .bar { width:100%; height:20px; background:#ecf0f1;
+      border-radius:10px; overflow:hidden; margin:10px 0;
+    }
     .bar .used { height:100%; background:linear-gradient(135deg,#2d89ef,#77b9ff); width:0%; }
   </style>
 </head>
@@ -29,10 +42,20 @@
   </div>
 
   <div class="container">
-    <h2>Mes cours</h2>
+    <h2>Maths</h2>
     <ul>
-      <li><a href="maths_chapitre1.pdf">Maths - Chapitre 1</a></li>
-      <li><a href="physique_tp.pdf">Physique - TP Électricité</a></li>
+      <li><a href="maths/chapitre1.pdf">Chapitre 1 - Algèbre</a></li>
+      <li><a href="maths/chapitre2.pdf">Chapitre 2 - Géométrie</a></li>
+    </ul>
+
+    <h2>Physique</h2>
+    <ul>
+      <li><a href="physique/tp_electricite.pdf">TP Électricité</a></li>
+    </ul>
+
+    <h2>Français</h2>
+    <ul>
+      <li><a href="francais/dissertation.pdf">Dissertation</a></li>
     </ul>
 
     <div class="storage">
