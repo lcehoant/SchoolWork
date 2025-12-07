@@ -595,3 +595,40 @@
   </script>
 </body>
 </html>
+<div class="storage">
+  <h3>Stockage</h3>
+  <div class="bar">
+    <div class="used" id="storageUsed"></div>
+  </div>
+  <p id="storageText">0 Mo utilisés sur 1 Go</p>
+</div>
+
+<script>
+  // Fonction pour convertir une taille en Mo
+  function parseSizeToMo(str) {
+    if(!str) return 0;
+    str = str.toLowerCase().trim();
+    let num = parseFloat(str.replace(',', '.'));
+    if(str.includes('ko')) return num / 1000; // Ko → Mo
+    return num; // sinon déjà en Mo
+  }
+
+  function updateStorage() {
+    const rows = document.querySelectorAll('.row[data-size]');
+    let totalUsed = 0;
+    rows.forEach(r => {
+      totalUsed += parseSizeToMo(r.dataset.size);
+    });
+
+    const totalCapacity = 1000; // 1 Go = 1000 Mo
+    const percent = Math.min(100, (totalUsed / totalCapacity) * 100);
+
+    document.getElementById('storageUsed').style.width = percent + '%';
+    document.getElementById('storageText').textContent =
+      `${totalUsed.toFixed(1)} Mo utilisés sur 1 Go`;
+  }
+
+  // Appel initial
+  updateStorage();
+</script>
+
