@@ -1,99 +1,597 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>SchoolWork NAS</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
-    body { font-family: 'Segoe UI', Arial, sans-serif; margin:0; background:#f4f6f9; display:flex; height:100vh; }
+    :root{
+      /* Thème clair par défaut */
+      --bg:#f5f7fb;
+      --panel:#ffffff;
+      --panel-2:#f8fafc;
+      --text:#1f2a3a;
+      --muted:#6d7c90;
+      --primary:#2d89ef;
+      --primary-700:#236dc0;
+      --border:#e5e9f2;
+      --accent:#27ae60;
+      --warning:#f39c12;
+      --danger:#e74c3c;
+      --violet:#8e44ad;
+      --shadow:0 14px 40px rgba(18,38,60,.10);
+    }
+    /* Thème sombre si html[data-theme="dark"] */
+    html[data-theme="dark"]{
+      --bg:#0b1020;
+      --panel:#121831;
+      --panel-2:#0f1530;
+      --text:#eaf2ff;
+      --muted:#93a0b5;
+      --primary:#2d89ef;
+      --primary-700:#236dc0;
+      --border:#1c2440;
+      --accent:#49d189;
+      --warning:#f5b942;
+      --danger:#ff6b6b;
+      --violet:#c084fc;
+      --shadow:0 20px 60px rgba(0,0,0,.35);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      background:
+        radial-gradient(1200px 600px at 20% 30%, var(--panel-2), var(--bg));
+      color:var(--text); display:flex; flex-direction:column;
+    }
+    /* Topbar */
+    .topbar{
+      height:64px; background:var(--panel); border-bottom:1px solid var(--border);
+      display:flex; align-items:center; gap:16px; padding:0 16px; position:sticky; top:0; z-index:20;
+      box-shadow:var(--shadow);
+    }
+    .brand{display:flex; align-items:center; gap:12px; font-weight:700}
+    .logo{
+      width:30px; height:30px; border-radius:8px; display:grid; place-items:center; color:#fff; font-size:16px;
+      background:linear-gradient(135deg,#2d89ef,#8ec5ff); box-shadow:0 10px 26px rgba(45,137,239,.25);
+    }
+    .search{flex:1; position:relative; max-width:680px}
+    .search input{
+      width:100%; padding:11px 38px 11px 36px; border:1px solid var(--border); border-radius:10px;
+      background:var(--panel-2); outline:none; font-size:14px; color:var(--text);
+    }
+    .search .icon{
+      position:absolute; left:10px; top:50%; transform:translateY(-50%); color:var(--muted); font-size:16px;
+    }
+    .toolbar{display:flex; gap:8px; align-items:center}
+    .btn{
+      padding:9px 12px; border:1px solid var(--border); border-radius:10px; background:var(--panel);
+      font-size:14px; cursor:pointer; color:var(--text);
+      transition:background .2s ease, transform .06s ease;
+    }
+    .btn:hover{background:var(--panel-2)}
+    .btn:active{transform:translateY(1px)}
+    .btn.primary{border-color:transparent; background:var(--primary); color:#fff}
+    .btn.primary:hover{background:var(--primary-700)}
+    .btn.danger{border-color:transparent; background:var(--danger); color:#fff}
+    /* Layout */
+    .layout{display:flex; gap:16px; padding:16px; flex:1; min-height:0}
     /* Sidebar */
-    .sidebar {
-      width:220px; background:#2c3e50; color:white; display:flex; flex-direction:column;
-      padding:20px; box-shadow:2px 0 8px rgba(0,0,0,0.1);
+    .sidebar{
+      width:260px; background:var(--panel); border:1px solid var(--border); border-radius:14px;
+      padding:12px; display:flex; flex-direction:column; gap:10px; box-shadow:var(--shadow);
+      position:sticky; top:80px; height:calc(100vh - 96px); overflow:auto;
     }
-    .sidebar h2 { margin:0 0 20px; font-size:1.2em; }
-    .sidebar a {
-      color:white; text-decoration:none; padding:10px; border-radius:6px; display:block;
-      margin:5px 0;
+    .section-title{font-size:12px; text-transform:uppercase; letter-spacing:.08em; color:var(--muted); margin:6px 8px}
+    .nav-item{
+      display:flex; align-items:center; gap:10px; padding:10px; border-radius:10px; cursor:pointer;
+      transition:background .2s ease;
     }
-    .sidebar a:hover { background:#34495e; }
+    .nav-item:hover{background:var(--panel-2)}
+    .nav-item.active{background:#e9f2ff; color:var(--primary); font-weight:600}
+    html[data-theme="dark"] .nav-item.active{background:#132656; color:#8ec5ff}
+    .nav-item .icon{font-size:18px; width:22px; text-align:center}
+    .tags{display:flex; flex-wrap:wrap; gap:8px; padding:8px}
+    .tag{
+      font-size:12px; padding:6px 10px; border:1px solid var(--border); border-radius:999px; color:var(--muted);
+      cursor:pointer; transition:background .2s ease, border .2s ease, color .2s ease;
+    }
+    .tag.active{border-color:var(--primary); color:var(--primary); background:#eaf3ff}
+    html[data-theme="dark"] .tag.active{background:#132656; color:#8ec5ff; border-color:#27407c}
     /* Main */
-    .main { flex:1; display:flex; flex-direction:column; }
-    .topbar {
-      background:#3498db; color:white; padding:15px; display:flex; justify-content:space-between; align-items:center;
+    .main{flex:1; display:flex; flex-direction:column; gap:12px}
+    .crumbs{
+      background:var(--panel); border:1px solid var(--border); border-radius:14px; padding:12px 14px; display:flex; align-items:center; gap:8px; flex-wrap:wrap;
+      box-shadow:var(--shadow);
     }
-    .topbar h1 { margin:0; font-size:1.5em; }
-    .btn.logout {
-      background:#e74c3c; color:white; border:none; border-radius:6px;
-      padding:8px 12px; cursor:pointer; font-size:14px;
+    .crumbs a{color:var(--primary); text-decoration:none}
+    .grid{
+      background:var(--panel); border:1px solid var(--border); border-radius:14px; overflow:hidden; box-shadow:var(--shadow);
     }
-    .btn.logout:hover { background:#c0392b; }
-    .content { padding:20px; overflow:auto; }
-    h2 { border-bottom:2px solid #3498db; padding-bottom:5px; }
-    ul { list-style:none; padding:0; }
-    li { margin:8px 0; }
-    a.file {
-      display:inline-block; padding:8px 12px;
-      background:#3498db; color:white; text-decoration:none;
-      border-radius:6px;
+    .grid .head, .grid .row{
+      display:grid; grid-template-columns: 54px minmax(240px,1fr) 140px 140px 180px; align-items:center;
     }
-    a.file:hover { background:#2980b9; }
-    /* Storage */
-    .storage {
-      margin:20px 0; background:#fff; padding:20px;
-      border-radius:10px; box-shadow:0 2px 8px rgba(0,0,0,0.1);
+    .grid .head{
+      background:var(--panel-2); border-bottom:1px solid var(--border); font-size:12px; text-transform:uppercase; letter-spacing:.08em; color:var(--muted);
     }
-    .bar { width:100%; height:20px; background:#ecf0f1;
-      border-radius:10px; overflow:hidden; margin:10px 0;
+    .grid .cell{padding:12px 14px; border-bottom:1px solid var(--border)}
+    .row:hover{background:var(--panel-2)}
+    .name{display:flex; align-items:center; gap:10px}
+    .file-icon{
+      width:32px; height:32px; border-radius:8px; display:grid; place-items:center; font-size:13px; color:#fff; font-weight:700;
+      box-shadow:0 8px 22px rgba(0,0,0,.12);
     }
-    .bar .used { height:100%; background:linear-gradient(135deg,#2d89ef,#77b9ff); width:0%; }
+    .folder{background:linear-gradient(135deg,#f7b733,#fc4a1a)}
+    .pdf{background:linear-gradient(135deg,#e74c3c,#ff7f7f)}
+    .doc{background:linear-gradient(135deg,#3498db,#77b9ff)}
+    .img{background:linear-gradient(135deg,#8e44ad,#c084fc)}
+    .sheet{background:linear-gradient(135deg,#27ae60,#6bd79a)}
+    .zip{background:linear-gradient(135deg,#6c7a89,#a0a7b4)}
+    .tag-pill{
+      font-size:12px; padding:6px 10px; border-radius:999px; background:#f2f5fb; color:var(--muted); display:inline-block;
+      border:1px solid var(--border);
+    }
+    html[data-theme="dark"] .tag-pill{background:#101738; color:#a7b6d4; border-color:#1c2440}
+    .status.ok{color:var(--accent); font-weight:600}
+    .status.todo{color:var(--warning); font-weight:600}
+    .status.miss{color:var(--danger); font-weight:600}
+    /* Storage card */
+    .cards{display:grid; grid-template-columns:repeat(3, minmax(220px,1fr)); gap:12px}
+    .card{
+      background:var(--panel); border:1px solid var(--border); border-radius:14px; padding:12px 14px; box-shadow:var(--shadow);
+    }
+    .card h3{margin:6px 0 10px; font-size:15px}
+    .bar{
+      width:100%; height:18px; background:var(--panel-2); border-radius:999px; overflow:hidden; border:1px solid var(--border);
+    }
+    .bar .used{height:100%; background:linear-gradient(135deg, var(--primary), #8ec5ff); width:0%}
+    .kpi{display:flex; gap:12px; color:var(--muted); font-size:12px; margin-top:8px}
+    /* Toasts */
+    .toast{
+      position:fixed; bottom:16px; right:16px; z-index:100; display:flex; flex-direction:column; gap:8px;
+    }
+    .toast .item{
+      background:var(--panel); border:1px solid var(--border); border-radius:12px; padding:10px 12px; box-shadow:var(--shadow);
+      font-size:13px; color:var(--text); display:flex; align-items:center; gap:8px; animation:fadeIn .3s ease;
+    }
+    @keyframes fadeIn{from{opacity:.0; transform:translateY(6px)}to{opacity:1; transform:none}}
+    /* Modal */
+    .modalBackdrop{
+      position:fixed; inset:0; background:rgba(0,0,0,.35); display:none; align-items:center; justify-content:center; z-index:90;
+    }
+    .modal{
+      width:min(92vw,520px); background:var(--panel); border:1px solid var(--border); border-radius:16px; box-shadow:var(--shadow);
+      padding:16px;
+    }
+    .modal h3{margin:6px 0 12px}
+    .modal .row{display:flex; gap:8px; align-items:center; margin:8px 0}
+    .modal input[type="text"]{
+      flex:1; padding:10px; border:1px solid var(--border); border-radius:10px; background:var(--panel-2); color:var(--text);
+    }
+    .modal .actions{display:flex; justify-content:flex-end; gap:8px; margin-top:10px}
+    /* Responsive */
+    @media (max-width:1100px){
+      .grid .head, .grid .row{grid-template-columns: 54px minmax(200px,1fr) 120px 120px 160px}
+      .cards{grid-template-columns:repeat(2, minmax(220px,1fr))}
+    }
+    @media (max-width:900px){
+      .layout{gap:10px; padding:10px}
+      .sidebar{display:none}
+      .cards{grid-template-columns:1fr}
+      .grid .head, .grid .row{grid-template-columns: 54px minmax(160px,1fr) 120px 0 140px}
+      .grid .cell:nth-child(4){display:none}
+    }
   </style>
 </head>
 <body>
-  <div class="sidebar">
-    <h2>📂 Dossiers</h2>
-    <a href="#">🏠 Accueil</a>
-    <a href="#">📐 Maths</a>
-    <a href="#">⚡ Physique</a>
-    <a href="#">🖋️ Français</a>
-    <a href="#">🏺 Histoire</a>
+  <!-- Topbar -->
+  <div class="topbar">
+    <div class="brand">
+      <div class="logo">📁</div>
+      <div>SchoolWork NAS</div>
+    </div>
+    <div class="search">
+      <span class="icon">🔍</span>
+      <input id="search" type="search" placeholder="Rechercher fichiers, dossiers, matières..." />
+    </div>
+    <div class="toolbar">
+      <button class="btn primary" id="uploadBtn">Uploader</button>
+      <button class="btn" id="newFolderBtn">Nouveau dossier</button>
+      <button class="btn" id="refreshBtn">Rafraîchir</button>
+      <button class="btn" id="themeBtn">Thème: Clair</button>
+      <button class="btn danger" id="logoutBtn">Déconnexion</button>
+    </div>
   </div>
 
-  <div class="main">
-    <div class="topbar">
-      <h1>SchoolWork NAS</h1>
-      <button class="btn logout" onclick="logout()">Déconnexion</button>
-    </div>
-    <div class="content">
-      <h2>Maths</h2>
-      <ul>
-        <li><a class="file" href="maths/chapitre1.pdf">Chapitre 1 - Algèbre</a></li>
-        <li><a class="file" href="maths/chapitre2.pdf">Chapitre 2 - Géométrie</a></li>
-      </ul>
+  <div class="layout">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="section-title">Racine</div>
+      <div class="nav-item active" data-folder="root"><span class="icon">🏠</span><span>Accueil</span></div>
+      <div class="nav-item" data-folder="maths"><span class="icon">📐</span><span>Maths</span></div>
+      <div class="nav-item" data-folder="physique"><span class="icon">⚡</span><span>Physique</span></div>
+      <div class="nav-item" data-folder="histoire"><span class="icon">🏺</span><span>Histoire</span></div>
+      <div class="nav-item" data-folder="francais"><span class="icon">🖋️</span><span>Français</span></div>
 
-      <h2>Physique</h2>
-      <ul>
-        <li><a class="file" href="physique/tp_electricite.pdf">TP Électricité</a></li>
-      </ul>
+      <div class="section-title">Tags rapides</div>
+      <div class="tags">
+        <div class="tag" data-tag="devoir">Devoir</div>
+        <div class="tag" data-tag="cours">Cours</div>
+        <div class="tag" data-tag="annales">Annales</div>
+        <div class="tag" data-tag="images">Images</div>
+      </div>
+    </aside>
 
-      <h2>Français</h2>
-      <ul>
-        <li><a class="file" href="francais/dissertation.pdf">Dissertation</a></li>
-      </ul>
+    <!-- Main -->
+    <main class="main">
+      <div class="crumbs">
+        <span>Emplacement:</span>
+        <a href="#" id="crumb-root">/</a>
+        <span id="crumb-path">Accueil</span>
+      </div>
 
-      <div class="storage">
-        <h3>Stockage</h3>
-        <div class="bar">
-          <div class="used" style="width:0%"></div>
+      <!-- File grid -->
+      <div class="grid" id="fileGrid">
+        <div class="head">
+          <div class="cell">Type</div>
+          <div class="cell">Nom</div>
+          <div class="cell">Taille</div>
+          <div class="cell">État</div>
+          <div class="cell">Tags</div>
         </div>
-        <p>0 Mo utilisés sur 1 Go</p>
+
+        <!-- Root folders -->
+        <div class="row" data-name="Maths" data-type="folder" data-folder="root" data-tags="cours">
+          <div class="cell"><div class="file-icon folder">📁</div></div>
+          <div class="cell name">Maths</div>
+          <div class="cell">—</div>
+          <div class="cell"><span class="status ok">Complet</span></div>
+          <div class="cell"><span class="tag-pill">Cours</span></div>
+        </div>
+        <div class="row" data-name="Physique" data-type="folder" data-folder="root" data-tags="cours">
+          <div class="cell"><div class="file-icon folder">📁</div></div>
+          <div class="cell name">Physique</div>
+          <div class="cell">—</div>
+          <div class="cell"><span class="status todo">À compléter</span></div>
+          <div class="cell"><span class="tag-pill">Cours</span></div>
+        </div>
+        <div class="row" data-name="Français" data-type="folder" data-folder="root" data-tags="cours">
+          <div class="cell"><div class="file-icon folder">📁</div></div>
+          <div class="cell name">Français</div>
+          <div class="cell">—</div>
+          <div class="cell"><span class="status ok">Complet</span></div>
+          <div class="cell"><span class="tag-pill">Cours</span></div>
+        </div>
+        <div class="row" data-name="Histoire" data-type="folder" data-folder="root" data-tags="cours">
+          <div class="cell"><div class="file-icon folder">📁</div></div>
+          <div class="cell name">Histoire</div>
+          <div class="cell">—</div>
+          <div class="cell"><span class="status miss">Manque</span></div>
+          <div class="cell"><span class="tag-pill">Cours</span></div>
+        </div>
+
+        <!-- Maths folder files -->
+        <div class="row" data-name="Chapitre_1_Algebre.pdf" data-type="pdf" data-folder="maths" data-tags="devoir,cours" data-size="1.2 Mo">
+          <div class="cell"><div class="file-icon pdf">PDF</div></div>
+          <div class="cell name"><a href="maths/Chapitre_1_Algebre.pdf" target="_blank">Chapitre_1_Algebre.pdf</a></div>
+          <div class="cell">1.2 Mo</div>
+          <div class="cell"><span class="status todo">À revoir</span></div>
+          <div class="cell"><span class="tag-pill">Devoir</span></div>
+        </div>
+        <div class="row" data-name="Formulaire_2025.docx" data-type="doc" data-folder="maths" data-tags="cours" data-size="320 Ko">
+          <div class="cell"><div class="file-icon doc">DOC</div></div>
+          <div class="cell name"><a href="maths/Formulaire_2025.docx" target="_blank">Formulaire_2025.docx</a></div>
+          <div class="cell">320 Ko</div>
+          <div class="cell"><span class="status ok">OK</span></div>
+          <div class="cell"><span class="tag-pill">Cours</span></div>
+        </div>
+        <div class="row" data-name="Annales_Bac_2024.pdf" data-type="pdf" data-folder="maths" data-tags="annales" data-size="2.8 Mo">
+          <div class="cell"><div class="file-icon pdf">PDF</div></div>
+          <div class="cell name"><a href="maths/Annales_Bac_2024.pdf" target="_blank">Annales_Bac_2024.pdf</a></div>
+          <div class="cell">2.8 Mo</div>
+          <div class="cell"><span class="status ok">Référence</span></div>
+          <div class="cell"><span class="tag-pill">Annales</span></div>
+        </div>
+
+        <!-- Physique folder files -->
+        <div class="row" data-name="TP_Electricite.pdf" data-type="pdf" data-folder="physique" data-tags="devoir" data-size="780 Ko">
+          <div class="cell"><div class="file-icon pdf">PDF</div></div>
+          <div class="cell name"><a href="physique/TP_Electricite.pdf" target="_blank">TP_Electricite.pdf</a></div>
+          <div class="cell">780 Ko</div>
+          <div class="cell"><span class="status todo">À faire</span></div>
+          <div class="cell"><span class="tag-pill">Devoir</span></div>
+        </div>
+        <div class="row" data-name="Schema_moteur.png" data-type="img" data-folder="physique" data-tags="images" data-size="2.4 Mo">
+          <div class="cell"><div class="file-icon img">IMG</div></div>
+          <div class="cell name"><a href="physique/Schema_moteur.png" target="_blank">Schema_moteur.png</a></div>
+          <div class="cell">2.4 Mo</div>
+          <div class="cell"><span class="status ok">OK</span></div>
+          <div class="cell"><span class="tag-pill">Images</span></div>
+        </div>
+
+        <!-- Français folder files -->
+        <div class="row" data-name="Dissertation_Montaigne.docx" data-type="doc" data-folder="francais" data-tags="devoir,cours" data-size="420 Ko">
+          <div class="cell"><div class="file-icon doc">DOC</div></div>
+          <div class="cell name"><a href="francais/Dissertation_Montaigne.docx" target="_blank">Dissertation_Montaigne.docx</a></div>
+          <div class="cell">420 Ko</div>
+          <div class="cell"><span class="status todo">À relire</span></div>
+          <div class="cell"><span class="tag-pill">Devoir</span></div>
+        </div>
+
+        <!-- Histoire folder files -->
+        <div class="row" data-name="Civilisations_Antiques.pdf" data-type="pdf" data-folder="histoire" data-tags="cours" data-size="1.9 Mo">
+          <div class="cell"><div class="file-icon pdf">PDF</div></div>
+          <div class="cell name"><a href="histoire/Civilisations_Antiques.pdf" target="_blank">Civilisations_Antiques.pdf</a></div>
+          <div class="cell">1.9 Mo</div>
+          <div class="cell"><span class="status ok">Complet</span></div>
+          <div class="cell"><span class="tag-pill">Cours</span></div>
+        </div>
+      </div>
+
+      <!-- Cards: stockage + petits KPIs -->
+      <div class="cards">
+        <div class="card">
+          <h3>Stockage</h3>
+          <div class="bar"><div class="used" id="storageUsed" style="width:0%"></div></div>
+          <div class="kpi">
+            <div><strong>Total:</strong> 1 Go</div>
+            <div id="kpiUsed"><strong>Utilisé:</strong> 0 Mo</div>
+            <div id="kpiFree"><strong>Libre:</strong> 1000 Mo</div>
+          </div>
+        </div>
+        <div class="card">
+          <h3>Fichiers</h3>
+          <div class="kpi">
+            <div id="kpiCount"><strong>Total:</strong> 0</div>
+            <div id="kpiTodo"><strong>À faire:</strong> 0</div>
+            <div id="kpiOk"><strong>OK:</strong> 0</div>
+          </div>
+        </div>
+        <div class="card">
+          <h3>Tags actifs</h3>
+          <div class="kpi">
+            <div id="kpiTag"><strong>Tag:</strong> Aucun</div>
+            <div id="kpiFolder"><strong>Dossier:</strong> Accueil</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer" style="color:var(--muted); font-size:12px; text-align:center; padding:10px 0 16px">
+        Made with ❤️ by Léon — Interface type NAS pour SchoolWork
+      </div>
+    </main>
+  </div>
+
+  <!-- Modal Upload -->
+  <div class="modalBackdrop" id="modalBackdrop">
+    <div class="modal">
+      <h3>Uploader un fichier (simulation)</h3>
+      <div class="row">
+        <span style="color:var(--muted); font-size:13px">Nom du fichier</span>
+        <input type="text" id="uploadName" placeholder="ex: NouveauCours.pdf" />
+      </div>
+      <div class="row">
+        <span style="color:var(--muted); font-size:13px">Taille</span>
+        <input type="text" id="uploadSize" placeholder="ex: 1.5 Mo ou 250 Ko" />
+      </div>
+      <div class="row">
+        <span style="color:var(--muted); font-size:13px">Type</span>
+        <input type="text" id="uploadType" placeholder="pdf, doc, img, zip…" />
+      </div>
+      <div class="row">
+        <span style="color:var(--muted); font-size:13px">Dossier cible</span>
+        <input type="text" id="uploadFolder" placeholder="root, maths, physique…" />
+      </div>
+      <div class="row">
+        <span style="color:var(--muted); font-size:13px">Tags (comma)</span>
+        <input type="text" id="uploadTags" placeholder="devoir,cours" />
+      </div>
+      <div class="actions">
+        <button class="btn" id="cancelUpload">Annuler</button>
+        <button class="btn primary" id="confirmUpload">Ajouter</button>
       </div>
     </div>
   </div>
 
+  <!-- Toast container -->
+  <div class="toast" id="toast"></div>
+
   <script>
-    function logout() {
-      window.location.href = "login.html";
+    // Mini “protection” cosmétique: si pas “connecté”, renvoyer vers login
+    try{
+      const logged = localStorage.getItem('sw_logged_in');
+      if(logged !== '1'){ /* cosmétique seulement */
+        // Ne redirige pas immédiatement pour que tu puisses tester en local si tu veux.
+        // Décommenter la ligne ci-dessous pour forcer:
+        // window.location.href = 'login.html';
+      }
+    }catch(e){}
+
+    const rows = Array.from(document.querySelectorAll('.row'));
+    const navItems = document.querySelectorAll('.nav-item');
+    const tags = document.querySelectorAll('.tag');
+    const search = document.getElementById('search');
+    const crumbPath = document.getElementById('crumb-path');
+    const storageUsed = document.getElementById('storageUsed');
+    const kpiUsed = document.getElementById('kpiUsed');
+    const kpiFree = document.getElementById('kpiFree');
+    const kpiCount = document.getElementById('kpiCount');
+    const kpiTodo = document.getElementById('kpiTodo');
+    const kpiOk = document.getElementById('kpiOk');
+    const kpiTag = document.getElementById('kpiTag');
+    const kpiFolder = document.getElementById('kpiFolder');
+
+    const themeBtn = document.getElementById('themeBtn');
+    const logoutBtn = document.getElementById('logoutBtn');
+    const uploadBtn = document.getElementById('uploadBtn');
+    const modalBackdrop = document.getElementById('modalBackdrop');
+    const toast = document.getElementById('toast');
+
+    let currentFolder = 'root';
+    let activeTag = null;
+    let searchTerm = '';
+
+    function parseSizeToMo(str){
+      // Accept "1.5 Mo" or "250 Ko"
+      if(!str) return 0;
+      const s = String(str).trim().toLowerCase();
+      const num = parseFloat(s.replace(',', '.'));
+      if(isNaN(num)) return 0;
+      if(s.includes('ko')) return num/1000; // approx
+      return num; // assume Mo
     }
+
+    function computeStats(){
+      // Filtered rows
+      const visible = rows.filter(r => r.style.display !== 'none');
+      const filesVisible = visible.filter(r => r.dataset.type !== 'folder');
+      let usedMo = 0;
+      filesVisible.forEach(r => { usedMo += parseSizeToMo(r.dataset.size); });
+      const totalMo = 1000; // 1 Go ≈ 1000 Mo pour l’affichage
+      const pct = Math.min(100, Math.round((usedMo/totalMo)*100));
+      storageUsed.style.width = pct + '%';
+      kpiUsed.innerHTML = '<strong>Utilisé:</strong> ' + Math.round(usedMo*10)/10 + ' Mo';
+      kpiFree.innerHTML = '<strong>Libre:</strong> ' + Math.max(0, Math.round((totalMo-usedMo))) + ' Mo';
+
+      kpiCount.innerHTML = '<strong>Total:</strong> ' + filesVisible.length;
+
+      let todo=0, ok=0;
+      filesVisible.forEach(r=>{
+        const st = r.querySelector('.status');
+        if(!st) return;
+        const cls = st.classList;
+        if(cls.contains('todo')) todo++;
+        if(cls.contains('ok')) ok++;
+      });
+      kpiTodo.innerHTML = '<strong>À faire:</strong> ' + todo;
+      kpiOk.innerHTML = '<strong>OK:</strong> ' + ok;
+
+      kpiTag.innerHTML = '<strong>Tag:</strong> ' + (activeTag ? activeTag : 'Aucun');
+      kpiFolder.innerHTML = '<strong>Dossier:</strong> ' + (currentFolder==='root' ? 'Accueil' : currentFolder.charAt(0).toUpperCase()+currentFolder.slice(1));
+    }
+
+    function render(){
+      rows.forEach(r=>{
+        const inFolder = r.dataset.folder === currentFolder;
+        const matchesTag = !activeTag || (r.dataset.tags||'').split(',').includes(activeTag);
+        const matchesSearch = !searchTerm || (r.dataset.name.toLowerCase().includes(searchTerm) || r.textContent.toLowerCase().includes(searchTerm));
+        r.style.display = (inFolder && matchesTag && matchesSearch) ? 'grid' : 'none';
+      });
+      crumbPath.textContent = currentFolder === 'root' ? 'Accueil' : currentFolder.charAt(0).toUpperCase()+currentFolder.slice(1);
+      computeStats();
+    }
+
+    navItems.forEach(n=>{
+      n.addEventListener('click', ()=>{
+        navItems.forEach(i=>i.classList.remove('active'));
+        n.classList.add('active');
+        currentFolder = n.dataset.folder;
+        activeTag = null;
+        tags.forEach(t=>t.classList.remove('active'));
+        searchTerm = '';
+        search.value = '';
+        render();
+      });
+    });
+
+    tags.forEach(t=>{
+      t.addEventListener('click', ()=>{
+        if(t.classList.contains('active')){
+          t.classList.remove('active'); activeTag = null;
+        }else{
+          tags.forEach(x=>x.classList.remove('active'));
+          t.classList.add('active'); activeTag = t.dataset.tag;
+        }
+        render();
+      });
+    });
+
+    search.addEventListener('input', (e)=>{
+      searchTerm = e.target.value.trim().toLowerCase();
+      render();
+    });
+
+    document.getElementById('newFolderBtn').addEventListener('click', ()=>{
+      makeToast('Créer un dossier: ajoute un répertoire dans ton dépôt (ex: maths/, physique/).');
+    });
+    document.getElementById('refreshBtn').addEventListener('click', ()=>{
+      location.reload();
+    });
+
+    // Thème
+    function setTheme(mode){
+      document.documentElement.setAttribute('data-theme', mode);
+      themeBtn.textContent = 'Thème: ' + (mode==='dark' ? 'Sombre' : 'Clair');
+      try{ localStorage.setItem('sw_theme', mode); }catch(e){}
+    }
+    themeBtn.addEventListener('click', ()=>{
+      const current = document.documentElement.getAttribute('data-theme') || 'light';
+      setTheme(current==='light' ? 'dark' : 'light');
+    });
+    (function initTheme(){
+      let saved=''; try{ saved = localStorage.getItem('sw_theme'); }catch(e){}
+      if(saved==='dark') setTheme('dark'); else setTheme('light');
+    })();
+
+    // Déconnexion
+    logoutBtn.addEventListener('click', ()=>{
+      try{ localStorage.removeItem('sw_logged_in'); }catch(e){}
+      window.location.href = 'login.html';
+    });
+
+    // Upload (modale simulée)
+    uploadBtn.addEventListener('click', ()=>{
+      modalBackdrop.style.display = 'flex';
+    });
+    document.getElementById('cancelUpload').addEventListener('click', ()=>{
+      modalBackdrop.style.display = 'none';
+    });
+    document.getElementById('confirmUpload').addEventListener('click', ()=>{
+      const name = document.getElementById('uploadName').value.trim();
+      const size = document.getElementById('uploadSize').value.trim();
+      const type = document.getElementById('uploadType').value.trim().toLowerCase();
+      const folder = document.getElementById('uploadFolder').value.trim().toLowerCase() || currentFolder;
+      const tagStr = document.getElementById('uploadTags').value.trim().toLowerCase();
+      const tagsArr = tagStr ? tagStr.split(',').map(s=>s.trim()).filter(Boolean) : [];
+      if(!name){ makeToast('Nom de fichier requis'); return; }
+      if(!size){ makeToast('Taille requise (ex: 1.2 Mo ou 250 Ko)'); return; }
+      const typeClass = ['pdf','doc','img','zip','sheet'].includes(type) ? type : 'doc';
+
+      // Créer une ligne DOM simulée
+      const row = document.createElement('div');
+      row.className = 'row';
+      row.dataset.name = name;
+      row.dataset.type = typeClass;
+      row.dataset.folder = folder || 'root';
+      row.dataset.tags = tagsArr.join(',');
+      row.dataset.size = size;
+
+      row.innerHTML = `
+        <div class="cell"><div class="file-icon ${typeClass}">${typeClass.toUpperCase()}</div></div>
+        <div class="cell name"><a href="#" target="_blank">${name}</a></div>
+        <div class="cell">${size}</div>
+        <div class="cell"><span class="status ok">Ajouté</span></div>
+        <div class="cell">${tagsArr.map(t=>'<span class="tag-pill">'+t.charAt(0).toUpperCase()+t.slice(1)+'</span>').join('')||'<span class="tag-pill">Fichier</span>'}</div>
+      `;
+      document.getElementById('fileGrid').appendChild(row);
+      rows.push(row);
+      render();
+      modalBackdrop.style.display = 'none';
+      makeToast('Fichier ajouté (simulation).');
+    });
+
+    // Toast util
+    function makeToast(msg){
+      const item = document.createElement('div');
+      item.className = 'item';
+      item.innerHTML = '📢 ' + msg;
+      toast.appendChild(item);
+      setTimeout(()=>{ item.style.opacity='0'; item.style.transform='translateY(6px)'; }, 2200);
+      setTimeout(()=>{ item.remove(); }, 2600);
+    }
+
+    render();
   </script>
 </body>
 </html>
