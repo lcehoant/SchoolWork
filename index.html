@@ -8,47 +8,64 @@
       font-family: 'Segoe UI', Arial, sans-serif;
       margin: 0;
       padding: 0;
-      background: linear-gradient(135deg, #74ebd5 0%, #ACB6E5 100%);
+      background: #f4f6f9;
       color: #2c3e50;
     }
     header {
-      background: #2c3e50;
+      background: #34495e;
       color: white;
       text-align: center;
-      padding: 60px 20px;
-      background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/3/3b/Books_icon.svg/1024px-Books_icon.svg.png');
-      background-repeat: no-repeat;
-      background-position: center 20px;
-      background-size: 80px;
+      padding: 40px 20px;
     }
     header h1 {
-      margin-top: 100px;
-      font-size: 3em;
+      margin: 0;
+      font-size: 2.5em;
     }
     header p {
-      font-size: 1.3em;
-      margin-top: 10px;
-      color: #ddd;
+      margin: 10px 0 0;
+      font-size: 1.2em;
+      color: #ecf0f1;
     }
     .container {
       max-width: 900px;
       margin: 40px auto;
-      background: rgba(255,255,255,0.95);
-      padding: 40px;
-      border-radius: 15px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.2);
-      text-align: center;
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
     }
-    .placeholder {
-      font-size: 1.3em;
-      color: #555;
-      margin-top: 20px;
+    h2 {
+      border-bottom: 2px solid #3498db;
+      padding-bottom: 10px;
+      margin-bottom: 20px;
+      text-align: left;
+    }
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+    li {
+      margin: 12px 0;
+    }
+    a {
+      display: block;
+      padding: 10px;
+      background: #3498db;
+      color: white;
+      text-decoration: none;
+      border-radius: 6px;
+      transition: 0.3s;
+    }
+    a:hover {
+      background: #2980b9;
     }
     footer {
       text-align: center;
       padding: 20px;
       font-size: 0.9em;
       color: #555;
+      background: #ecf0f1;
+      margin-top: 40px;
     }
   </style>
 </head>
@@ -59,8 +76,29 @@
   </header>
 
   <div class="container">
-    <h2>🚀 En construction</h2>
-    <p class="placeholder">Aucun fichier pour l’instant.<br>Les cours arriveront bientôt ici !</p>
+    <h2>Maths</h2>
+    <ul>
+      <li><a href="#">Chapitre 1 - Algèbre</a></li>
+      <li><a href="#">Chapitre 2 - Géométrie</a></li>
+    </ul>
+
+    <h2>Physique</h2>
+    <ul>
+      <li><a href="#">Chapitre 1 - Mécanique</a></li>
+      <li><a href="#">Chapitre 2 - Électricité</a></li>
+    </ul>
+
+    <h2>Histoire</h2>
+    <ul>
+      <li><a href="#">Chapitre 1 - Antiquité</a></li>
+      <li><a href="#">Chapitre 2 - Moyen Âge</a></li>
+    </ul>
+
+    <h2>Français</h2>
+    <ul>
+      <li><a href="#">Chapitre 1 - Analyse de texte</a></li>
+      <li><a href="#">Chapitre 2 - Dissertation</a></li>
+    </ul>
   </div>
 
   <footer>
