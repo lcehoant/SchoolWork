@@ -313,3 +313,27 @@
   </script>
 </body>
 </html>
+<!-- Bouton Déconnexion -->
+<button class="btn logout" onclick="logout()">Déconnexion</button>
+
+<script>
+  function logout() {
+    // Redirige vers la page de login
+    window.location.href = "login.html";
+  }
+</script>
+
+<style>
+  .btn.logout {
+    background: #e74c3c;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 8px 12px;
+    cursor: pointer;
+    font-size: 14px;
+  }
+  .btn.logout:hover {
+    background: #c0392b;
+  }
+</style>
