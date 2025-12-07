@@ -6,26 +6,27 @@
   <style>
     body {
       font-family: 'Segoe UI', Arial, sans-serif;
-      background: linear-gradient(135deg, #74ebd5 0%, #ACB6E5 100%);
+      background: linear-gradient(135deg, #2d89ef, #8ec5ff);
       display: flex; justify-content: center; align-items: center;
       height: 100vh; margin: 0;
     }
     .login-box {
       background: #fff; padding: 40px; border-radius: 12px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-      width: 300px; text-align: center;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+      width: 320px; text-align: center;
     }
     h2 { margin-bottom: 20px; color: #2c3e50; }
     input {
-      width: 100%; padding: 10px; margin: 10px 0;
+      width: 100%; padding: 12px; margin: 10px 0;
       border: 1px solid #ccc; border-radius: 6px;
+      font-size: 14px;
     }
     button {
-      width: 100%; padding: 10px;
-      background: #3498db; color: white; border: none;
+      width: 100%; padding: 12px;
+      background: #2d89ef; color: white; border: none;
       border-radius: 6px; cursor: pointer; font-size: 1em;
     }
-    button:hover { background: #2980b9; }
+    button:hover { background: #236dc0; }
     .error { color: red; font-size: 0.9em; margin-top: 10px; }
   </style>
 </head>
@@ -45,7 +46,7 @@
       const error = document.getElementById('error');
 
       if(user === "leon" && pass === "1234") {
-        window.location.href = "nas.html"; // redirige vers ton NAS
+        window.location.href = "nas.html";
       } else {
         error.textContent = "Identifiants incorrects";
       }
