@@ -3,51 +3,115 @@
 <head>
   <meta charset="UTF-8">
   <title>SchoolWork NAS</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    :root {
+      --bg:#f5f7fb; --panel:#ffffff; --panel-2:#f8fafc; --text:#1f2a3a; --muted:#6d7c90;
+      --primary:#2d89ef; --primary-700:#236dc0; --border:#e5e9f2; --accent:#27ae60; --danger:#e74c3c;
+      --shadow:0 14px 40px rgba(18,38,60,.10);
+    }
+    html[data-theme="dark"] {
+      --bg:#0b1020; --panel:#121831; --panel-2:#0f1530; --text:#eaf2ff; --muted:#93a0b5;
+      --primary:#2d89ef; --primary-700:#236dc0; --border:#1c2440; --accent:#49d189; --danger:#ff6b6b;
+      --shadow:0 20px 60px rgba(0,0,0,.35);
+    }
+    body {margin:0; font-family:system-ui,Segoe UI,Roboto,Arial; background:var(--bg); color:var(--text);}
+    .topbar {height:64px; background:var(--panel); border-bottom:1px solid var(--border);
+      display:flex; align-items:center; justify-content:space-between; padding:0 16px; box-shadow:var(--shadow);}
+    .brand {display:flex; align-items:center; gap:10px; font-weight:700;}
+    .logo {width:30px; height:30px; border-radius:8px; display:grid; place-items:center;
+      background:linear-gradient(135deg,#2d89ef,#8ec5ff); color:#fff;}
+    .toolbar button {margin-left:8px; padding:8px 12px; border:none; border-radius:8px; cursor:pointer;}
+    .btn-primary {background:var(--primary); color:#fff;}
+    .btn-danger {background:var(--danger); color:#fff;}
+    .layout {display:flex; padding:16px;}
+    .sidebar {width:220px; background:var(--panel); border:1px solid var(--border); border-radius:12px; padding:12px;}
+    .nav-item {padding:8px; border-radius:8px; cursor:pointer;}
+    .nav-item:hover {background:var(--panel-2);}
+    .main {flex:1; margin-left:16px;}
+    .grid {width:100%; border-collapse:collapse; background:var(--panel); border-radius:12px; overflow:hidden;}
+    .grid th, .grid td {padding:10px; border-bottom:1px solid var(--border);}
+    .bar {width:100%; height:18px; background:var(--panel-2); border-radius:999px; overflow:hidden;}
+    .bar .used {height:100%; background:linear-gradient(135deg,var(--primary),#8ec5ff); width:0%;}
+    .toast {position:fixed; bottom:16px; right:16px;}
+    .toast div {background:var(--panel); border:1px solid var(--border); border-radius:8px; padding:10px; margin-top:6px; box-shadow:var(--shadow);}
+  </style>
 </head>
 <body>
-  <h2>SchoolWork NAS</h2>
-  <button onclick="logout()">Déconnexion</button>
-
-  <table border="1" id="fileGrid">
-    <tr><th>Nom</th><th>Taille</th></tr>
-    <tr data-size="1.2 Mo"><td><a href="maths/Chapitre_1_Algebre.pdf">Chapitre_1_Algebre.pdf</a></td><td>1.2 Mo</td></tr>
-    <tr data-size="320 Ko"><td><a href="maths/Formulaire_2025.docx">Formulaire_2025.docx</a></td><td>320 Ko</td></tr>
-    <tr data-size="780 Ko"><td><a href="physique/TP_Electricite.pdf">TP_Electricite.pdf</a></td><td>780 Ko</td></tr>
-    <tr data-size="2.4 Mo"><td><a href="physique/Schema_moteur.png">Schema_moteur.png</a></td><td>2.4 Mo</td></tr>
-    <tr data-size="420 Ko"><td><a href="francais/Dissertation_Montaigne.docx">Dissertation_Montaigne.docx</a></td><td>420 Ko</td></tr>
-    <tr data-size="1.9 Mo"><td><a href="histoire/Civilisations_Antiques.pdf">Civilisations_Antiques.pdf</a></td><td>1.9 Mo</td></tr>
-  </table>
-
-  <div style="margin-top:20px">
-    <div style="width:300px; background:#ddd; border-radius:10px; overflow:hidden">
-      <div id="storageBar" style="height:20px; background:#2d89ef; width:0%"></div>
+  <div class="topbar">
+    <div class="brand"><div class="logo">📁</div>SchoolWork NAS</div>
+    <div class="toolbar">
+      <button class="btn-primary" id="themeBtn">Thème: Clair</button>
+      <button class="btn-danger" id="logoutBtn">Déconnexion</button>
     </div>
-    <p id="storageText"></p>
   </div>
 
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="nav-item" data-folder="maths">📐 Maths</div>
+      <div class="nav-item" data-folder="physique">⚡ Physique</div>
+      <div class="nav-item" data-folder="francais">🖋️ Français</div>
+      <div class="nav-item" data-folder="histoire">🏺 Histoire</div>
+      <div class="nav-item" data-folder="geo">🗺️ Géo</div>
+    </aside>
+
+    <main class="main">
+      <h3>Fichiers</h3>
+      <table class="grid" id="fileGrid">
+        <tr><th>Nom</th><th>Taille</th></tr>
+        <tr data-size="1.2 Mo" data-folder="maths"><td><a href="maths/Chapitre_1_Algebre.pdf">Chapitre_1_Algebre.pdf</a></td><td>1.2 Mo</td></tr>
+        <tr data-size="320 Ko" data-folder="maths"><td><a href="maths/Formulaire_2025.docx">Formulaire_2025.docx</a></td><td>320 Ko</td></tr>
+        <tr data-size="780 Ko" data-folder="physique"><td><a href="physique/TP_Electricite.pdf">TP_Electricite.pdf</a></td><td>780 Ko</td></tr>
+        <tr data-size="2.4 Mo" data-folder="physique"><td><a href="physique/Schema_moteur.png">Schema_moteur.png</a></td><td>2.4 Mo</td></tr>
+        <tr data-size="420 Ko" data-folder="francais"><td><a href="francais/Dissertation_Montaigne.docx">Dissertation_Montaigne.docx</a></td><td>420 Ko</td></tr>
+        <tr data-size="1.9 Mo" data-folder="histoire"><td><a href="histoire/Civilisations_Antiques.pdf">Civilisations_Antiques.pdf</a></td><td>1.9 Mo</td></tr>
+        <tr data-size="1.1 Mo" data-folder="geo"><td><a href="geo/Carte_population.png">Carte_population.png</a></td><td>1.1 Mo</td></tr>
+      </table>
+
+      <h3>Stockage global</h3>
+      <div class="bar"><div class="used" id="storageUsed"></div></div>
+      <p id="storageText"></p>
+    </main>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
   <script>
-    function logout(){
-      localStorage.removeItem("sw_logged_in");
-      window.location.href="login.html";
-    }
-
     function parseSizeToMo(str){
-      str=str.toLowerCase();
-      let num=parseFloat(str.replace(',','.'));
-      if(str.includes('ko')) return num/1000;
-      return num;
+      str=str.toLowerCase(); let num=parseFloat(str.replace(',','.'));
+      if(str.includes('ko')) return num/1000; return num;
     }
-
     function updateStorage(){
       const rows=document.querySelectorAll('#fileGrid tr[data-size]');
-      let used=0;
-      rows.forEach(r=>{ used+=parseSizeToMo(r.dataset.size); });
-      const total=1000; // 1 Go
-      const pct=Math.min(100,(used/total)*100);
-      storageBar.style.width=pct+"%";
-      storageText.textContent=`${used.toFixed(1)} Mo utilisés sur 1 Go`;
+      let used=0; rows.forEach(r=>{used+=parseSizeToMo(r.dataset.size);});
+      const total=1000; const pct=Math.min(100,(used/total)*100);
+      document.getElementById('storageUsed').style.width=pct+"%";
+      document.getElementById('storageText').textContent=`${used.toFixed(1)} Mo utilisés sur 1 Go`;
     }
     updateStorage();
+
+    // Thème clair/sombre
+    const themeBtn=document.getElementById('themeBtn');
+    function setTheme(mode){
+      document.documentElement.setAttribute('data-theme',mode);
+      themeBtn.textContent="Thème: "+(mode==="dark"?"Sombre":"Clair");
+      localStorage.setItem("sw_theme",mode);
+    }
+    themeBtn.onclick=()=>{setTheme(document.documentElement.getAttribute("data-theme")==="dark"?"light":"dark");};
+    if(localStorage.getItem("sw_theme")==="dark") setTheme("dark");
+
+    // Déconnexion
+    document.getElementById('logoutBtn').onclick=()=>{
+      localStorage.removeItem("sw_logged_in"); window.location.href="login.html";
+    };
+
+    // Toast helper
+    function toastMsg(msg){
+      const t=document.createElement("div"); t.textContent=msg;
+      document.getElementById("toast").appendChild(t);
+      setTimeout(()=>t.remove(),2500);
+    }
+    toastMsg("Bienvenue sur ton NAS !");
   </script>
 </body>
 </html>
