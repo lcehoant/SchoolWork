@@ -1,118 +1,30 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <title>SchoolWork - Connexion</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <style>
-    :root{
-      --bg:#0b1020;
-      --panel:#141b32;
-      --panel-2:#162041;
-      --text:#eaf2ff;
-      --muted:#93a0b5;
-      --primary:#2d89ef;
-      --primary-700:#236dc0;
-      --accent:#27ae60;
-      --danger:#e74c3c;
-      --border:#1e2a52;
-    }
-    *{box-sizing:border-box}
-    html,body{height:100%}
-    body{
-      margin:0; font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-      background:
-        radial-gradient(1200px 600px at 15% 35%, #172557 0%, #0b1020 60%),
-        radial-gradient(800px 400px at 80% 20%, #0e1838 0%, transparent 60%);
-      color:var(--text); display:grid; place-items:center;
-    }
-    .wrap{
-      width:min(92vw,420px);
-      background:linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.02));
-      border:1px solid var(--border); border-radius:18px; padding:28px;
-      box-shadow:0 30px 60px rgba(0,0,0,.5); backdrop-filter: blur(10px);
-      animation:slide .6s cubic-bezier(.2,.8,.2,1);
-    }
-    .brand{
-      display:flex; align-items:center; gap:12px; margin-bottom:18px;
-    }
-    .logo{
-      width:44px; height:44px; border-radius:12px; display:grid; place-items:center;
-      background:linear-gradient(135deg,#2d89ef,#8ec5ff); color:#fff; font-size:20px;
-      box-shadow:0 10px 28px rgba(45,137,239,.35);
-    }
-    h1{margin:0; font-size:20px}
-    .sub{color:var(--muted); font-size:13px}
-    .field{margin:12px 0}
-    .label{font-size:12px; color:var(--muted); margin-bottom:6px}
-    input{
-      width:100%; padding:12px 14px; border:1px solid var(--border);
-      border-radius:10px; outline:none; background:var(--panel-2); color:var(--text);
-      transition:border .2s ease, box-shadow .2s ease;
-    }
-    input:focus{border-color:#3f64c7; box-shadow:0 0 0 4px rgba(61,108,214,.2)}
-    .actions{display:flex; gap:10px; margin-top:14px}
-    .btn{
-      flex:1; padding:12px 14px; border:none; border-radius:10px; cursor:pointer;
-      background:var(--primary); color:#fff; font-weight:600;
-      box-shadow:0 10px 24px rgba(45,137,239,.25);
-      transition:transform .06s ease, background .2s ease;
-    }
-    .btn:hover{background:var(--primary-700)}
-    .btn:active{transform:translateY(1px)}
-    .error{color:var(--danger); font-size:13px; min-height:18px; margin-top:6px}
-    .tips{margin-top:16px; font-size:12px; color:var(--muted)}
-    .footer{margin-top:14px; font-size:11px; color:var(--muted); text-align:center}
-    @keyframes slide{from{transform:translateY(12px); opacity:0} to{transform:none; opacity:1}}
-  </style>
+  <meta charset="UTF-8">
+  <title>Connexion</title>
 </head>
 <body>
-  <div class="wrap">
-    <div class="brand">
-      <div class="logo">🔐</div>
-      <div>
-        <h1>Connexion</h1>
-        <div class="sub">Accède à ton NAS SchoolWork</div>
-      </div>
-    </div>
-
-    <div class="field">
-      <div class="label">Nom d’utilisateur</div>
-      <input id="username" type="text" placeholder="ex: leon" autocomplete="username" />
-    </div>
-    <div class="field">
-      <div class="label">Mot de passe</div>
-      <input id="password" type="password" placeholder="••••" autocomplete="current-password" />
-    </div>
-
-    <div class="actions">
-      <button class="btn" id="loginBtn">Se connecter</button>
-    </div>
-    <div class="error" id="error"></div>
-
-    <div class="tips">Astuce: essaie avec “leon” et “1234” pour tester.</div>
-    <div class="footer">SchoolWork NAS — maquette statique pour l’effet privé</div>
-  </div>
+  <h2>Connexion</h2>
+  <input id="username" placeholder="Nom d'utilisateur">
+  <input id="password" type="password" placeholder="Mot de passe">
+  <button onclick="login()">Se connecter</button>
+  <p><a href="register.html">Créer un compte</a></p>
+  <p id="error"></p>
 
   <script>
-    const btn = document.getElementById('loginBtn');
-    const u = document.getElementById('username');
-    const p = document.getElementById('password');
-    const err = document.getElementById('error');
+    let users = JSON.parse(localStorage.getItem("users")) || {};
 
     function login(){
-      const user = (u.value||'').trim().toLowerCase();
-      const pass = p.value;
-      if(user === 'leon' && pass === '1234'){
-        // Optionnel: mini “session” locale pour l’effet (non-sécurisé)
-        try{ localStorage.setItem('sw_logged_in','1'); }catch(e){}
-        window.location.href = 'nas.html';
+      const u = username.value.trim();
+      const p = password.value;
+      if(users[u] && users[u] === p){
+        localStorage.setItem("sw_logged_in","1");
+        window.location.href="nas.html";
       }else{
-        err.textContent = 'Identifiants incorrects';
+        error.textContent="Identifiants incorrects";
       }
     }
-    btn.addEventListener('click', login);
-    p.addEventListener('keydown', (e)=>{ if(e.key==='Enter') login(); });
   </script>
 </body>
 </html>
