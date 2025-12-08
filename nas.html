@@ -65,7 +65,7 @@ body{margin:0;font-family:system-ui;background:var(--bg);color:var(--text)}
 <script>
 const rows=[...document.querySelectorAll('#fileGrid tr[data-size]')];let folder=null,tag=null,search="";
 function parseSize(s){s=s.toLowerCase();let n=parseFloat(s.replace(',','.'));return s.includes('ko')?n/1000:n}
-function update(){let used=0,visible=0;rows.forEach(r=>{let ok=(!folder||r.dataset.folder===folder)&&(!tag||r.dataset.tags.includes(tag))&&(!search||r.textContent.toLowerCase().includes(search));r.style.display=ok?"":"none";if(ok){visible++;used+=parseSize(r.dataset.size)}});let pct=Math.min(100,(used/1000)*100);storageUsed.style.width=pct+"%";storageText.textContent=`${used.toFixed(1)} Mo utilisés / 1 Go`;stats.textContent=`${visible} fichiers visibles`}
+function update(){let used=0,visible=0,done=0,todo=0;rows.forEach(r=>{let ok=(!folder||r.dataset.folder===folder)&&(!tag||r.dataset.tags.includes(tag))&&(!search||r.textContent.toLowerCase().includes(search));r.style.display=ok?"":"none";if(ok){visible++;used+=parseSize(r.dataset.size);if(r.querySelector('.ok'))done++;if(r.querySelector('.todo'))todo++}});let pct=Math.min(100,(used/1000)*100);storageUsed.style.width=pct+"%";storageText.textContent=`${used.toFixed(1)} Mo utilisés / 1 Go`;stats.textContent=`${visible} fichiers visibles • ${done} terminés • ${todo} à faire`}
 document.querySelectorAll('.nav-item').forEach(n=>n.onclick=()=>{folder=n.dataset.folder;update()})
 document.querySelectorAll('.tag').forEach(t=>t.onclick=()=>{tag=tag===t.dataset.tag?null:t.dataset.tag;document.querySelectorAll('.tag').forEach(x=>x.classList.remove('active'));if(tag)t.classList.add('active');update()})
 search=document.getElementById('search');search.oninput=()=>{search=search.value.toLowerCase();update()}
