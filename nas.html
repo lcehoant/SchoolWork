@@ -1,180 +1,409 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>SchoolWork NAS Pro</title>
-<style>
-:root{--bg:#f6f8fb;--panel:#fff;--text:#1f2a3a;--muted:#6d7c90;--primary:#2d89ef;--border:#e5e9f2;--accent:#27ae60;--danger:#e74c3c;--panel-2:#f0f4fa}
-html[data-theme=dark]{--bg:#0b1020;--panel:#121831;--text:#eaf2ff;--muted:#93a0b5;--primary:#2d89ef;--border:#1c2440;--accent:#49d189;--danger:#ff6b6b;--panel-2:#0f1530}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,Segoe UI,Roboto,Arial}
-.top{display:flex;justify-content:space-between;align-items:center;padding:12px;background:var(--panel);border-bottom:1px solid var(--border)}
-.brand{display:flex;align-items:center;gap:10px;font-weight:700}.logo{width:30px;height:30px;border-radius:8px;display:grid;place-items:center;background:linear-gradient(135deg,#2d89ef,#8ec5ff);color:#fff}
-.actions{display:flex;gap:8px}.btn{padding:8px 10px;border:1px solid var(--border);background:var(--panel);border-radius:8px;cursor:pointer}
-.btn-primary{background:var(--primary);color:#fff;border-color:transparent}
-.layout{display:grid;grid-template-columns:240px 1fr;gap:16px;padding:16px}
-@media(max-width:900px){.layout{grid-template-columns:1fr}.sidebar{display:none}.sidebar.open{display:block}}
-.sidebar{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:12px}
-.section{font-size:12px;color:var(--muted);margin:6px 0}
-.item,.tag{padding:8px;border-radius:8px;cursor:pointer}
-.item:hover,.tag:hover{background:var(--panel-2)}
-.tag.active{background:var(--primary);color:#fff}
-.main{display:grid;gap:12px}
-.widgets{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
-.widget{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:12px}
-.widget h4{margin:0 0 6px 0;font-size:14px;color:var(--muted)}
-.toolbar{display:grid;grid-template-columns:1fr auto;gap:10px}
-.search{width:100%;padding:10px;border:1px solid var(--border);border-radius:10px;background:var(--panel-2)}
-.info{align-self:center;font-size:12px;color:var(--muted)}
-.table{width:100%;border-collapse:collapse;background:var(--panel);border:1px solid var(--border);border-radius:12px;overflow:hidden}
-.table th,.table td{padding:10px;border-bottom:1px solid var(--border);text-align:left}
-.table th{background:var(--panel);font-weight:600;user-select:none;cursor:pointer}
-.name{display:flex;align-items:center;gap:8px}
-.badge{padding:2px 6px;border-radius:6px;font-size:12px;display:inline-block}
-.ok{background:var(--accent);color:#fff}.todo{background:var(--danger);color:#fff}
-.kit{display:flex;gap:8px}
-.kit a,.kit button{border:none;background:transparent;color:var(--primary);cursor:pointer}
-.bar{height:16px;background:var(--panel-2);border:1px solid var(--border);border-radius:999px;overflow:hidden}
-.used{height:100%;background:linear-gradient(90deg,var(--primary),#8ec5ff);width:0%;transition:width .5s}
-.toast{position:fixed;bottom:12px;right:12px}
-.toast div{background:var(--panel);border:1px solid var(--border);border-radius:8px;padding:10px;margin-top:6px}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SchoolWork NAS Pro</title>
+  <style>
+    :root{
+      --bg: #f6f8fb;
+      --panel: #ffffff;
+      --panel-2:#f2f5fa;
+      --text: #1f2a3a;
+      --muted:#6d7c90;
+      --primary:#2d89ef;
+      --primary-2:#8ec5ff;
+      --border:#e5e9f2;
+      --accent:#27ae60;
+      --danger:#e74c3c;
+      --shadow: 0 10px 30px rgba(25, 40, 70, .08);
+    }
+    html[data-theme="dark"]{
+      --bg:#0b1020; --panel:#121831; --panel-2:#0f1530;
+      --text:#eaf2ff; --muted:#93a0b5; --border:#1c2440;
+      --primary:#2d89ef; --primary-2:#5aa6ff; --accent:#49d189; --danger:#ff6b6b;
+      --shadow: 0 10px 30px rgba(0,0,0,.25);
+    }
+
+    *{box-sizing:border-box}
+    body{
+      margin:0; background:var(--bg); color:var(--text);
+      font-family: system-ui, Segoe UI, Roboto, Arial;
+    }
+
+    /* Topbar */
+    .topbar{
+      display:flex; align-items:center; justify-content:space-between;
+      padding:14px 18px; background:var(--panel); border-bottom:1px solid var(--border);
+      position:sticky; top:0; z-index:10;
+    }
+    .brand{display:flex; align-items:center; gap:12px; font-weight:700; letter-spacing:.2px}
+    .logo{
+      width:36px; height:36px; border-radius:10px; display:grid; place-items:center;
+      color:#fff; box-shadow:var(--shadow);
+      background:linear-gradient(135deg, var(--primary), var(--primary-2));
+    }
+    .actions{display:flex; gap:10px}
+    .btn{
+      padding:10px 12px; border:1px solid var(--border); border-radius:10px;
+      background:var(--panel); color:var(--text); cursor:pointer; transition:.2s ease;
+    }
+    .btn:hover{box-shadow:var(--shadow)}
+    .btn-primary{
+      background:var(--primary); color:#fff; border-color:transparent;
+    }
+
+    /* Layout */
+    .layout{
+      display:grid; grid-template-columns:280px 1fr; gap:18px; padding:18px; max-width:1200px; margin:0 auto;
+    }
+    @media (max-width: 940px){
+      .layout{grid-template-columns:1fr}
+      .sidebar{display:none}
+      .sidebar.open{display:block}
+    }
+
+    /* Sidebar */
+    .sidebar{
+      background:var(--panel); border:1px solid var(--border); border-radius:14px;
+      padding:14px; box-shadow:var(--shadow);
+    }
+    .section{font-size:12px; color:var(--muted); margin:8px 0 6px}
+    .item, .tag{
+      padding:10px; border-radius:10px; cursor:pointer; transition:.2s ease;
+    }
+    .item:hover, .tag:hover{background:var(--panel-2)}
+    .tag.active{background:var(--primary); color:#fff}
+
+    /* Main */
+    .main{display:grid; gap:18px}
+
+    /* Widgets */
+    .widgets{display:grid; grid-template-columns:repeat(3, 1fr); gap:18px}
+    @media (max-width: 720px){ .widgets{grid-template-columns:1fr} }
+    .widget{
+      background:var(--panel); border:1px solid var(--border); border-radius:14px;
+      padding:14px; box-shadow:var(--shadow)
+    }
+    .widget h4{margin:0 0 8px; font-size:14px; color:var(--muted)}
+
+    .bar{
+      height:18px; background:var(--panel-2); border:1px solid var(--border); border-radius:999px; overflow:hidden;
+    }
+    .used{
+      height:100%; width:0%;
+      background:linear-gradient(90deg, var(--primary), var(--primary-2));
+      transition:width .6s ease;
+    }
+
+    /* Toolbar */
+    .toolbar{
+      display:grid; grid-template-columns:1fr auto; gap:12px;
+      background:var(--panel); border:1px solid var(--border); border-radius:14px; padding:12px; box-shadow:var(--shadow);
+    }
+    .search{
+      width:100%; padding:12px; border:1px solid var(--border); border-radius:10px; background:var(--panel-2);
+    }
+    .info{align-self:center; font-size:13px; color:var(--muted)}
+
+    /* Table */
+    .table{
+      width:100%; border-collapse:collapse; background:var(--panel);
+      border:1px solid var(--border); border-radius:14px; overflow:hidden; box-shadow:var(--shadow);
+    }
+    .table thead th{
+      padding:12px; text-align:left; font-weight:600; background:var(--panel);
+      border-bottom:1px solid var(--border); user-select:none; cursor:pointer;
+    }
+    .table tbody td{padding:12px; border-bottom:1px solid var(--border)}
+    .table tbody tr:hover{background:var(--panel-2)}
+
+    .name{display:flex; align-items:center; gap:10px}
+    .badge{
+      display:inline-block; padding:4px 8px; font-size:12px; border-radius:999px;
+    }
+    .ok{background:var(--accent); color:#fff}
+    .todo{background:var(--danger); color:#fff}
+
+    .kit{display:flex; gap:10px}
+    .kit a, .kit button{
+      border:none; background:transparent; color:var(--primary); cursor:pointer;
+    }
+
+    /* Toasts */
+    .toast{
+      position:fixed; bottom:16px; right:16px; display:flex; flex-direction:column; gap:8px; z-index:20;
+    }
+    .toast .bubble{
+      background:var(--panel); border:1px solid var(--border); border-radius:12px; padding:12px; box-shadow:var(--shadow);
+      animation:fadeIn .2s ease;
+    }
+    @keyframes fadeIn{from{opacity:0; transform:translateY(6px)} to{opacity:1; transform:translateY(0)}}
+  </style>
 </head>
 <body>
-<div class="top">
-  <div class="brand"><div class="logo">📁</div>SchoolWork NAS Pro</div>
-  <div class="actions">
-    <button class="btn" id="toggleSidebar">Dossiers</button>
-    <span id="userBox" class="btn">👤 Invité</span>
-    <button class="btn" id="themeBtn">Thème</button>
-    <button class="btn-primary" id="logoutBtn">Déconnexion</button>
+  <!-- Topbar -->
+  <header class="topbar">
+    <div class="brand">
+      <div class="logo">📁</div>
+      <div>SchoolWork NAS Pro</div>
+    </div>
+    <div class="actions">
+      <button class="btn" id="toggleSidebar">Dossiers</button>
+      <span class="btn" id="userBox">👤 Invité</span>
+      <button class="btn" id="themeBtn">Thème</button>
+      <button class="btn btn-primary" id="logoutBtn">Déconnexion</button>
+    </div>
+  </header>
+
+  <!-- Content -->
+  <div class="layout">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="section">Dossiers</div>
+      <div class="item" data-folder="maths">📐 Maths</div>
+      <div class="item" data-folder="physique">⚡ Physique</div>
+      <div class="item" data-folder="francais">🖋️ Français</div>
+      <div class="item" data-folder="histoire">🏺 Histoire</div>
+      <div class="item" data-folder="geo">🗺️ Géo</div>
+
+      <div class="section">Tags</div>
+      <div class="tag" data-tag="devoir">📝 Devoir</div>
+      <div class="tag" data-tag="cours">📚 Cours</div>
+      <div class="tag" data-tag="images">🖼️ Images</div>
+    </aside>
+
+    <!-- Main -->
+    <main class="main">
+      <!-- Widgets -->
+      <section class="widgets">
+        <div class="widget">
+          <h4>Stockage</h4>
+          <div class="bar"><div class="used" id="storageUsed"></div></div>
+          <div id="storageText" style="margin-top:8px; font-size:13px; color:var(--muted)">—</div>
+        </div>
+        <div class="widget">
+          <h4>Fichiers</h4>
+          <div id="fileCount" style="font-weight:700; font-size:16px">0 visibles</div>
+          <div id="stateCount" style="font-size:13px; color:var(--muted)">0 ✅ • 0 ⏳</div>
+        </div>
+        <div class="widget">
+          <h4>Filtre actif</h4>
+          <div id="activeFilter" style="font-size:13px; color:var(--muted)">Aucun</div>
+        </div>
+      </section>
+
+      <!-- Toolbar -->
+      <section class="toolbar">
+        <input id="search" class="search" placeholder="Rechercher par nom, type, tag...">
+        <div class="info" id="info">Tri: Nom ↑</div>
+      </section>
+
+      <!-- Table -->
+      <table class="table" id="grid">
+        <thead>
+          <tr>
+            <th data-sort="name">Nom</th>
+            <th data-sort="size">Taille</th>
+            <th data-sort="date">Date</th>
+            <th data-sort="state">État</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="rows">
+          <!-- Remplace les href par tes vrais fichiers -->
+          <tr data-folder="maths" data-tags="devoir,cours" data-size="1.2 Mo" data-date="2025-12-01" data-state="ok" data-type="pdf">
+            <td class="name">📄 <a href="maths/Chapitre_1_Algebre.pdf" download>Chapitre_1_Algebre.pdf</a></td>
+            <td>1.2 Mo</td><td>01/12/25</td>
+            <td><span class="badge ok">Terminé</span></td>
+            <td class="kit"><a href="maths/Chapitre_1_Algebre.pdf">Ouvrir</a><button data-copy="maths/Chapitre_1_Algebre.pdf">Copier</button></td>
+          </tr>
+          <tr data-folder="maths" data-tags="cours" data-size="320 Ko" data-date="2025-12-02" data-state="todo" data-type="docx">
+            <td class="name">📝 <a href="maths/Formulaire_2025.docx" download>Formulaire_2025.docx</a></td>
+            <td>320 Ko</td><td>02/12/25</td>
+            <td><span class="badge todo">À faire</span></td>
+            <td class="kit"><a href="maths/Formulaire_2025.docx">Ouvrir</a><button data-copy="maths/Formulaire_2025.docx">Copier</button></td>
+          </tr>
+          <tr data-folder="physique" data-tags="devoir" data-size="780 Ko" data-date="2025-12-03" data-state="ok" data-type="pdf">
+            <td class="name">📄 <a href="physique/TP_Electricite.pdf" download>TP_Electricite.pdf</a></td>
+            <td>780 Ko</td><td>03/12/25</td>
+            <td><span class="badge ok">Terminé</span></td>
+            <td class="kit"><a href="physique/TP_Electricite.pdf">Ouvrir</a><button data-copy="physique/TP_Electricite.pdf">Copier</button></td>
+          </tr>
+          <tr data-folder="physique" data-tags="images" data-size="2.4 Mo" data-date="2025-12-04" data-state="todo" data-type="png">
+            <td class="name">🖼️ <a href="physique/Schema_moteur.png" download>Schema_moteur.png</a></td>
+            <td>2.4 Mo</td><td>04/12/25</td>
+            <td><span class="badge todo">À faire</span></td>
+            <td class="kit"><a href="physique/Schema_moteur.png">Ouvrir</a><button data-copy="physique/Schema_moteur.png">Copier</button></td>
+          </tr>
+          <tr data-folder="francais" data-tags="devoir,cours" data-size="420 Ko" data-date="2025-12-05" data-state="ok" data-type="docx">
+            <td class="name">📝 <a href="francais/Dissertation_Montaigne.docx" download>Dissertation_Montaigne.docx</a></td>
+            <td>420 Ko</td><td>05/12/25</td>
+            <td><span class="badge ok">Terminé</span></td>
+            <td class="kit"><a href="francais/Dissertation_Montaigne.docx">Ouvrir</a><button data-copy="francais/Dissertation_Montaigne.docx">Copier</button></td>
+          </tr>
+          <tr data-folder="histoire" data-tags="cours" data-size="1.9 Mo" data-date="2025-12-06" data-state="todo" data-type="pdf">
+            <td class="name">📄 <a href="histoire/Civilisations_Antiques.pdf" download>Civilisations_Antiques.pdf</a></td>
+            <td>1.9 Mo</td><td>06/12/25</td>
+            <td><span class="badge todo">À faire</span></td>
+            <td class="kit"><a href="histoire/Civilisations_Antiques.pdf">Ouvrir</a><button data-copy="histoire/Civilisations_Antiques.pdf">Copier</button></td>
+          </tr>
+          <tr data-folder="geo" data-tags="images,cours" data-size="1.1 Mo" data-date="2025-12-07" data-state="ok" data-type="png">
+            <td class="name">🖼️ <a href="geo/Carte_population.png" download>Carte_population.png</a></td>
+            <td>1.1 Mo</td><td>07/12/25</td>
+            <td><span class="badge ok">Terminé</span></td>
+            <td class="kit"><a href="geo/Carte_population.png">Ouvrir</a><button data-copy="geo/Carte_population.png">Copier</button></td>
+          </tr>
+        </tbody>
+      </table>
+    </main>
   </div>
-</div>
 
-<div class="layout">
-  <aside class="sidebar" id="sidebar">
-    <div class="section">Dossiers</div>
-    <div class="item" data-folder="maths">📐 Maths</div>
-    <div class="item" data-folder="physique">⚡ Physique</div>
-    <div class="item" data-folder="francais">🖋️ Français</div>
-    <div class="item" data-folder="histoire">🏺 Histoire</div>
-    <div class="item" data-folder="geo">🗺️ Géo</div>
-    <div class="section">Tags</div>
-    <div class="tag" data-tag="devoir">📝 Devoir</div>
-    <div class="tag" data-tag="cours">📚 Cours</div>
-    <div class="tag" data-tag="images">🖼️ Images</div>
-  </aside>
+  <!-- Toasts -->
+  <div class="toast" id="toast"></div>
 
-  <main class="main">
-    <div class="widgets">
-      <div class="widget"><h4>Stockage</h4><div class="bar"><div class="used" id="storageUsed"></div></div><div id="storageText" style="margin-top:8px;font-size:13px;color:var(--muted)"></div></div>
-      <div class="widget"><h4>Fichiers</h4><div id="fileCount" style="font-weight:700">0 visibles</div><div id="stateCount" style="font-size:13px;color:var(--muted)">0 ✅ • 0 ⏳</div></div>
-      <div class="widget"><h4>Filtre actif</h4><div id="activeFilter" style="font-size:13px;color:var(--muted)">Aucun</div></div>
-    </div>
+  <script>
+    // Constantes et état
+    const TOTAL_MO = 1000; // 1 Go
+    const rows = Array.from(document.querySelectorAll('#rows tr'));
+    let currentFolder = null, currentTag = null, searchTerm = "";
+    let sortKey = "name", sortDir = 1;
 
-    <div class="toolbar">
-      <input id="search" class="search" placeholder="Rechercher par nom, type, tag...">
-      <div class="info" id="info">Tri: Nom ↑</div>
-    </div>
+    // Utilitaires
+    function parseSizeToMo(s){
+      s = s.toLowerCase();
+      const n = parseFloat(s.replace(',','.'));
+      return s.includes('ko') ? n/1000 : n;
+    }
+    function pct(mo){ return Math.min(100, (mo/TOTAL_MO)*100); }
+    function labelForSort(k){ return ({name:"Nom", size:"Taille", date:"Date", state:"État"})[k]; }
 
-    <table class="table" id="grid">
-      <thead>
-        <tr>
-          <th data-sort="name">Nom</th>
-          <th data-sort="size">Taille</th>
-          <th data-sort="date">Date</th>
-          <th data-sort="state">État</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody id="rows">
-        <!-- Remplace les href par tes vrais fichiers -->
-        <tr data-folder="maths" data-tags="devoir,cours" data-size="1.2 Mo" data-date="2025-12-01" data-state="ok" data-type="pdf">
-          <td class="name">📄 <a href="maths/Chapitre_1_Algebre.pdf" download>Chapitre_1_Algebre.pdf</a></td><td>1.2 Mo</td><td>01/12/25</td><td><span class="badge ok">Terminé</span></td>
-          <td class="kit"><a href="maths/Chapitre_1_Algebre.pdf">Ouvrir</a><button data-copy="maths/Chapitre_1_Algebre.pdf">Copier</button></td>
-        </tr>
-        <tr data-folder="maths" data-tags="cours" data-size="320 Ko" data-date="2025-12-02" data-state="todo" data-type="docx">
-          <td class="name">📝 <a href="maths/Formulaire_2025.docx" download>Formulaire_2025.docx</a></td><td>320 Ko</td><td>02/12/25</td><td><span class="badge todo">À faire</span></td>
-          <td class="kit"><a href="maths/Formulaire_2025.docx">Ouvrir</a><button data-copy="maths/Formulaire_2025.docx">Copier</button></td>
-        </tr>
-        <tr data-folder="physique" data-tags="devoir" data-size="780 Ko" data-date="2025-12-03" data-state="ok" data-type="pdf">
-          <td class="name">📄 <a href="physique/TP_Electricite.pdf" download>TP_Electricite.pdf</a></td><td>780 Ko</td><td>03/12/25</td><td><span class="badge ok">Terminé</span></td>
-          <td class="kit"><a href="physique/TP_Electricite.pdf">Ouvrir</a><button data-copy="physique/TP_Electricite.pdf">Copier</button></td>
-        </tr>
-        <tr data-folder="physique" data-tags="images" data-size="2.4 Mo" data-date="2025-12-04" data-state="todo" data-type="png">
-          <td class="name">🖼️ <a href="physique/Schema_moteur.png" download>Schema_moteur.png</a></td><td>2.4 Mo</td><td>04/12/25</td><td><span class="badge todo">À faire</span></td>
-          <td class="kit"><a href="physique/Schema_moteur.png">Ouvrir</a><button data-copy="physique/Schema_moteur.png">Copier</button></td>
-        </tr>
-        <tr data-folder="francais" data-tags="devoir,cours" data-size="420 Ko" data-date="2025-12-05" data-state="ok" data-type="docx">
-          <td class="name">📝 <a href="francais/Dissertation_Montaigne.docx" download>Dissertation_Montaigne.docx</a></td><td>420 Ko</td><td>05/12/25</td><td><span class="badge ok">Terminé</span></td>
-          <td class="kit"><a href="francais/Dissertation_Montaigne.docx">Ouvrir</a><button data-copy="francais/Dissertation_Montaigne.docx">Copier</button></td>
-        </tr>
-        <tr data-folder="histoire" data-tags="cours" data-size="1.9 Mo" data-date="2025-12-06" data-state="todo" data-type="pdf">
-          <td class="name">📄 <a href="histoire/Civilisations_Antiques.pdf" download>Civilisations_Antiques.pdf</a></td><td>1.9 Mo</td><td>06/12/25</td><td><span class="badge todo">À faire</span></td>
-          <td class="kit"><a href="histoire/Civilisations_Antiques.pdf">Ouvrir</a><button data-copy="histoire/Civilisations_Antiques.pdf">Copier</button></td>
-        </tr>
-        <tr data-folder="geo" data-tags="images,cours" data-size="1.1 Mo" data-date="2025-12-07" data-state="ok" data-type="png">
-          <td class="name">🖼️ <a href="geo/Carte_population.png" download>Carte_population.png</a></td><td>1.1 Mo</td><td>07/12/25</td><td><span class="badge ok">Terminé</span></td>
-          <td class="kit"><a href="geo/Carte_population.png">Ouvrir</a><button data-copy="geo/Carte_population.png">Copier</button></td>
-        </tr>
-      </tbody>
-    </table>
-  </main>
-</div>
+    // Rendu / logique
+    function apply(){
+      // Tri
+      rows.sort((a,b)=>{
+        if (sortKey === "name") {
+          return a.querySelector('.name a').textContent.localeCompare(b.querySelector('.name a').textContent) * sortDir;
+        }
+        if (sortKey === "size") {
+          return (parseSizeToMo(a.dataset.size) - parseSizeToMo(b.dataset.size)) * sortDir;
+        }
+        if (sortKey === "date") {
+          return (new Date(a.dataset.date) - new Date(b.dataset.date)) * sortDir;
+        }
+        if (sortKey === "state") {
+          return ((a.dataset.state > b.dataset.state) - (a.dataset.state < b.dataset.state)) * sortDir;
+        }
+        return 0;
+      }).forEach(r => r.parentNode.appendChild(r));
 
-<div class="toast" id="toast"></div>
+      // Filtres + stats
+      let used = 0, visible = 0, done = 0, todo = 0;
+      rows.forEach(r=>{
+        const okFolder = !currentFolder || r.dataset.folder === currentFolder;
+        const okTag = !currentTag || r.dataset.tags.includes(currentTag);
+        const okSearch = !searchTerm || r.textContent.toLowerCase().includes(searchTerm);
+        const show = okFolder && okTag && okSearch;
+        r.style.display = show ? "" : "none";
+        if (show){
+          visible++;
+          used += parseSizeToMo(r.dataset.size);
+          if (r.dataset.state === "ok") done++; else todo++;
+        }
+      });
 
-<script>
-const TOTAL=1000; // 1 Go en Mo
-const rows=[...document.querySelectorAll('#rows tr')];
-let folder=null,tag=null,search="",sortKey="name",sortDir=1;
+      storageUsed.style.width = pct(used) + "%";
+      storageText.textContent = `${used.toFixed(1)} Mo utilisés / ${(TOTAL_MO/1000)} Go`;
+      fileCount.textContent = `${visible} visibles`;
+      stateCount.textContent = `${done} ✅ • ${todo} ⏳`;
 
-function parseSize(s){s=s.toLowerCase();let n=parseFloat(s.replace(',','.'));return s.includes('ko')?n/1000:n}
-function pct(mo){return Math.min(100,(mo/TOTAL)*100)}
-function setFilterText(){activeFilter.textContent=`${folder?`Dossier: ${folder}`:''}${folder&&tag?' • ':''}${tag?`Tag: ${tag}`:''}${(!folder&&!tag)?'Aucun':''}`}
+      // Texte d'info et filtre
+      info.textContent = `Tri: ${labelForSort(sortKey)} ${sortDir===1?"↑":"↓"}`;
+      activeFilter.textContent = [
+        currentFolder ? `Dossier: ${currentFolder}` : null,
+        currentTag ? `Tag: ${currentTag}` : null
+      ].filter(Boolean).join(" • ") || "Aucun";
+    }
 
-function apply(){
-  rows.sort((a,b)=>{
-    if(sortKey==="name")return a.querySelector('.name a').textContent.localeCompare(b.querySelector('.name a').textContent)*sortDir;
-    if(sortKey==="size")return (parseSize(a.dataset.size)-parseSize(b.dataset.size))*sortDir;
-    if(sortKey==="date")return (new Date(a.dataset.date)-new Date(b.dataset.date))*sortDir;
-    if(sortKey==="state")return ((a.dataset.state>b.dataset.state)-(a.dataset.state<b.dataset.state))*sortDir;
-    return 0;
-  }).forEach(r=>rows[0].parentNode.appendChild(r));
+    // Événements: dossiers / tags
+    document.querySelectorAll('.item').forEach(i=>{
+      i.addEventListener('click', ()=>{
+        currentFolder = i.dataset.folder;
+        apply();
+      });
+    });
+    document.querySelectorAll('.tag').forEach(t=>{
+      t.addEventListener('click', ()=>{
+        currentTag = (currentTag === t.dataset.tag) ? null : t.dataset.tag;
+        document.querySelectorAll('.tag').forEach(x=>x.classList.remove('active'));
+        if (currentTag) t.classList.add('active');
+        apply();
+      });
+    });
 
-  let used=0,visible=0,done=0,todo=0;
-  rows.forEach(r=>{
-    const okF=!folder||r.dataset.folder===folder;
-    const okT=!tag||r.dataset.tags.includes(tag);
-    const okS=!search||r.textContent.toLowerCase().includes(search);
-    const show=okF&&okT&&okS;
-    r.style.display=show?"":"none";
-    if(show){visible++;used+=parseSize(r.dataset.size);r.dataset.state==="ok"?done++:todo++;}
-  });
-  storageUsed.style.width=pct(used)+"%";
-  storageText.textContent=`${used.toFixed(1)} Mo utilisés / ${TOTAL/1000} Go`;
-  fileCount.textContent=`${visible} visibles`;
-  stateCount.textContent=`${done} ✅ • ${todo} ⏳`;
-  info.textContent=`Tri: ${({name:"Nom",size:"Taille",date:"Date",state:"État"})[sortKey]} ${sortDir===1?"↑":"↓"}`;
-  setFilterText();
-}
+    // Recherche
+    document.getElementById('search').addEventListener('input', (e)=>{
+      searchTerm = e.target.value.toLowerCase();
+      apply();
+    });
 
-document.querySelectorAll('.item').forEach(i=>i.onclick=()=>{folder=i.dataset.folder;apply()});
-document.querySelectorAll('.tag').forEach(tg=>tg.onclick=()=>{tag=(tag===tg.dataset.tag)?null:tg.dataset.tag;document.querySelectorAll('.tag').forEach(x=>x.classList.remove('active'));if(tag)tg.classList.add('active');apply()});
-search=document.getElementById('search');search.oninput=e=>{search=e.target.value.toLowerCase();apply()}
-document.querySelectorAll('th[data-sort]').forEach(th=>th.onclick=()=>{const k=th.dataset.sort;sortDir=sortKey===k?-sortDir:1;sortKey=k;apply()})
+    // Tri colonnes
+    document.querySelectorAll('th[data-sort]').forEach(th=>{
+      th.addEventListener('click', ()=>{
+        const key = th.dataset.sort;
+        sortDir = (sortKey === key) ? -sortDir : 1;
+        sortKey = key;
+        apply();
+      });
+    });
 
-document.querySelectorAll('[data-copy]').forEach(btn=>btn.onclick=async()=>{try{await navigator.clipboard.writeText(btn.dataset.copy);toast("Chemin copié")}catch{toast("Copie indisponible")}})
-function toast(m){const d=document.createElement('div');d.textContent=m;toastBox.appendChild(d);setTimeout(()=>d.remove(),2500)}
-const toastBox=document.getElementById('toast');
+    // Actions
+    document.querySelectorAll('[data-copy]').forEach(btn=>{
+      btn.addEventListener('click', async ()=>{
+        try {
+          await navigator.clipboard.writeText(btn.dataset.copy);
+          toast("Chemin copié");
+        } catch {
+          toast("Copie non disponible");
+        }
+      });
+    });
 
-function setTheme(m){document.documentElement.setAttribute('data-theme',m);localStorage.setItem('sw_theme',m)}
-themeBtn.onclick=()=>{setTheme(document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark')}
-const t=localStorage.getItem('sw_theme');if(t)setTheme(t);
-const u=localStorage.getItem('sw_user')||'Invité';userBox.textContent='👤 '+u;
-logoutBtn.onclick=()=>{localStorage.removeItem('sw_logged_in');location.href='login.html'}
+    // Thème / utilisateur / déconnexion
+    function setTheme(mode){
+      document.documentElement.setAttribute('data-theme', mode);
+      localStorage.setItem('sw_theme', mode);
+    }
+    themeBtn.addEventListener('click', ()=>{
+      const next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+      setTheme(next);
+    });
+    const savedTheme = localStorage.getItem('sw_theme'); if (savedTheme) setTheme(savedTheme);
+    const user = localStorage.getItem('sw_user') || 'Invité';
+    userBox.textContent = '👤 ' + user;
+    logoutBtn.addEventListener('click', ()=>{
+      localStorage.removeItem('sw_logged_in');
+      location.href = 'login.html';
+    });
 
-toggleSidebar.onclick=()=>{sidebar.classList.toggle('open')}
-apply();toast("Bienvenue sur ton NAS Pro ✨");
-</script>
+    // Sidebar mobile
+    toggleSidebar.addEventListener('click', ()=>{
+      sidebar.classList.toggle('open');
+    });
+
+    // Toasts
+    function toast(msg){
+      const el = document.createElement('div');
+      el.className = 'bubble';
+      el.textContent = msg;
+      toastBox.appendChild(el);
+      setTimeout(()=> el.remove(), 2600);
+    }
+    const toastBox = document.getElementById('toast');
+
+    // Boot
+    apply();
+    toast("Bienvenue sur ton NAS Pro, Léon ✨");
+  </script>
 </body>
 </html>
