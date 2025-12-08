@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>SchoolWork NAS</title>
+<title>SchoolWork NAS Pro</title>
 <style>
 :root{--bg:#f5f7fb;--panel:#fff;--text:#1f2a3a;--muted:#6d7c90;--primary:#2d89ef;--border:#e5e9f2;--accent:#27ae60;--danger:#e74c3c}
 html[data-theme=dark]{--bg:#0b1020;--panel:#121831;--text:#eaf2ff;--muted:#93a0b5;--primary:#2d89ef;--border:#1c2440;--accent:#49d189;--danger:#ff6b6b}
@@ -22,10 +22,11 @@ body{margin:0;font-family:system-ui;background:var(--bg);color:var(--text)}
 .used{height:100%;background:linear-gradient(90deg,var(--primary),#8ec5ff);width:0%;transition:.5s}
 .toast{position:fixed;bottom:10px;right:10px}
 .toast div{background:var(--panel);padding:8px;border-radius:6px;margin-top:6px;border:1px solid var(--border)}
+.stats{margin-top:10px;font-size:14px;color:var(--muted)}
 </style>
 </head>
 <body>
-<div class="topbar"><div class="logo">📁</div>SchoolWork NAS
+<div class="topbar"><div class="logo">📁</div>SchoolWork NAS Pro
 <div><button id="themeBtn">Thème</button><button id="logoutBtn">Déconnexion</button></div></div>
 <div class="layout">
 <aside class="sidebar">
@@ -41,14 +42,14 @@ body{margin:0;font-family:system-ui;background:var(--bg);color:var(--text)}
 <main class="main">
 <div class="search"><input id="search" placeholder="Rechercher..."></div>
 <table class="grid" id="fileGrid">
-<tr><th>Nom</th><th>Taille</th></tr>
-<tr data-size="1.2 Mo" data-folder="maths" data-tags="devoir,cours"><td><a href="maths/Chapitre_1_Algebre.pdf">Chapitre_1_Algebre.pdf</a></td><td>1.2 Mo</td></tr>
-<tr data-size="320 Ko" data-folder="maths" data-tags="cours"><td><a href="maths/Formulaire_2025.docx">Formulaire_2025.docx</a></td><td>320 Ko</td></tr>
-<tr data-size="780 Ko" data-folder="physique" data-tags="devoir"><td><a href="physique/TP_Electricite.pdf">TP_Electricite.pdf</a></td><td>780 Ko</td></tr>
-<tr data-size="2.4 Mo" data-folder="physique" data-tags="images"><td><a href="physique/Schema_moteur.png">Schema_moteur.png</a></td><td>2.4 Mo</td></tr>
-<tr data-size="420 Ko" data-folder="francais" data-tags="devoir,cours"><td><a href="francais/Dissertation_Montaigne.docx">Dissertation_Montaigne.docx</a></td><td>420 Ko</td></tr>
-<tr data-size="1.9 Mo" data-folder="histoire" data-tags="cours"><td><a href="histoire/Civilisations_Antiques.pdf">Civilisations_Antiques.pdf</a></td><td>1.9 Mo</td></tr>
-<tr data-size="1.1 Mo" data-folder="geo" data-tags="images,cours"><td><a href="geo/Carte_population.png">Carte_population.png</a></td><td>1.1 Mo</td></tr>
+<tr><th>Nom</th><th>Taille</th><th>Date</th><th>État</th></tr>
+<tr data-size="1.2 Mo" data-folder="maths" data-tags="devoir,cours"><td><a href="maths/Chapitre_1_Algebre.pdf">Chapitre_1_Algebre.pdf</a></td><td>1.2 Mo</td><td>01/12/25</td><td>✅</td></tr>
+<tr data-size="320 Ko" data-folder="maths" data-tags="cours"><td><a href="maths/Formulaire_2025.docx">Formulaire_2025.docx</a></td><td>320 Ko</td><td>02/12/25</td><td>⏳</td></tr>
+<tr data-size="780 Ko" data-folder="physique" data-tags="devoir"><td><a href="physique/TP_Electricite.pdf">TP_Electricite.pdf</a></td><td>780 Ko</td><td>03/12/25</td><td>✅</td></tr>
+<tr data-size="2.4 Mo" data-folder="physique" data-tags="images"><td><a href="physique/Schema_moteur.png">Schema_moteur.png</a></td><td>2.4 Mo</td><td>04/12/25</td><td>⏳</td></tr>
+<tr data-size="420 Ko" data-folder="francais" data-tags="devoir,cours"><td><a href="francais/Dissertation_Montaigne.docx">Dissertation_Montaigne.docx</a></td><td>420 Ko</td><td>05/12/25</td><td>✅</td></tr>
+<tr data-size="1.9 Mo" data-folder="histoire" data-tags="cours"><td><a href="histoire/Civilisations_Antiques.pdf">Civilisations_Antiques.pdf</a></td><td>1.9 Mo</td><td>06/12/25</td><td>⏳</td></tr>
+<tr data-size="1.1 Mo" data-folder="geo" data-tags="images,cours"><td><a href="geo/Carte_population.png">Carte_population.png</a></td><td>1.1 Mo</td><td>07/12/25</td><td>✅</td></tr>
 </table>
 <h3>Stockage global</h3>
 <div class="bar"><div class="used" id="storageUsed"></div></div>
@@ -66,7 +67,7 @@ search=document.getElementById('search');search.oninput=()=>{search=search.value
 function toast(m){let d=document.createElement("div");d.textContent=m;toast.appendChild(d);setTimeout(()=>d.style.opacity=0,2000);setTimeout(()=>d.remove(),2500)}
 document.getElementById('themeBtn').onclick=()=>{let m=document.documentElement.getAttribute("data-theme")==="dark"?"light":"dark";document.documentElement.setAttribute("data-theme",m)}
 document.getElementById('logoutBtn').onclick=()=>{localStorage.removeItem("sw_logged_in");location.href="login.html"}
-update();toast("Bienvenue sur ton NAS !")
+update();toast("Bienvenue sur ton NAS Pro ✨")
 </script>
 </body>
 </html>
