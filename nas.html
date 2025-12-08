@@ -1,97 +1,72 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <title>SchoolWork NAS</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <style>
-    :root {
-      --bg:#f5f7fb; --panel:#ffffff; --panel-2:#f8fafc; --text:#1f2a3a; --muted:#6d7c90;
-      --primary:#2d89ef; --primary-700:#236dc0; --border:#e5e9f2; --accent:#27ae60; --danger:#e74c3c;
-      --shadow:0 14px 40px rgba(18,38,60,.10);
-    }
-    html[data-theme="dark"] {
-      --bg:#0b1020; --panel:#121831; --panel-2:#0f1530; --text:#eaf2ff; --muted:#93a0b5;
-      --primary:#2d89ef; --primary-700:#236dc0; --border:#1c2440; --accent:#49d189; --danger:#ff6b6b;
-      --shadow:0 20px 60px rgba(0,0,0,.35);
-    }
-    body {margin:0; font-family:system-ui,Segoe UI,Roboto,Arial; background:var(--bg); color:var(--text);}
-    .topbar {height:64px; background:var(--panel); border-bottom:1px solid var(--border);
-      display:flex; align-items:center; justify-content:space-between; padding:0 16px; box-shadow:var(--shadow);}
-    .brand {display:flex; align-items:center; gap:10px; font-weight:700;}
-    .logo {width:30px; height:30px; border-radius:8px; display:grid; place-items:center;
-      background:linear-gradient(135deg,#2d89ef,#8ec5ff); color:#fff;}
-    .toolbar button {margin-left:8px; padding:8px 12px; border:none; border-radius:8px; cursor:pointer;}
-    .btn-primary {background:var(--primary); color:#fff;}
-    .btn-danger {background:var(--danger); color:#fff;}
-    .layout {display:flex; padding:16px;}
-    .sidebar {width:220px; background:var(--panel); border:1px solid var(--border); border-radius:12px; padding:12px;}
-    .nav-item {padding:8px; border-radius:8px; cursor:pointer;}
-    .nav-item:hover {background:var(--panel-2);}
-    .tags {margin-top:12px;}
-    .tag {display:inline-block; margin:4px; padding:6px 10px; border:1px solid var(--border); border-radius:999px; cursor:pointer; font-size:12px;}
-    .tag.active {background:var(--primary); color:#fff;}
-    .main {flex:1; margin-left:16px;}
-    .grid {width:100%; border-collapse:collapse; background:var(--panel); border-radius:12px; overflow:hidden;}
-    .grid th, .grid td {padding:10px; border-bottom:1px solid var(--border);}
-    .bar {width:100%; height:18px; background:var(--panel-2); border-radius:999px; overflow:hidden;}
-    .bar .used {height:100%; background:linear-gradient(135deg,var(--primary),#8ec5ff); width:0%; transition:width .6s ease;}
-    .toast {position:fixed; bottom:16px; right:16px;}
-    .toast div {background:var(--panel); border:1px solid var(--border); border-radius:8px; padding:10px; margin-top:6px; box-shadow:var(--shadow); opacity:1; transition:opacity .5s;}
-    .stats {margin-top:12px; font-size:14px; color:var(--muted);}
-    .search {margin-bottom:12px;}
-    .search input {width:100%; padding:10px; border:1px solid var(--border); border-radius:8px; background:var(--panel-2);}
-  </style>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SchoolWork NAS</title>
+<style>
+:root{--bg:#f5f7fb;--panel:#fff;--text:#1f2a3a;--muted:#6d7c90;--primary:#2d89ef;--border:#e5e9f2;--accent:#27ae60;--danger:#e74c3c}
+html[data-theme=dark]{--bg:#0b1020;--panel:#121831;--text:#eaf2ff;--muted:#93a0b5;--primary:#2d89ef;--border:#1c2440;--accent:#49d189;--danger:#ff6b6b}
+body{margin:0;font-family:system-ui;background:var(--bg);color:var(--text)}
+.topbar{display:flex;justify-content:space-between;align-items:center;padding:10px;background:var(--panel);border-bottom:1px solid var(--border)}
+.logo{background:linear-gradient(135deg,#2d89ef,#8ec5ff);color:#fff;padding:6px;border-radius:6px}
+.layout{display:flex}
+.sidebar{width:200px;padding:10px;background:var(--panel);border-right:1px solid var(--border)}
+.nav-item,.tag{padding:6px;cursor:pointer;border-radius:6px}
+.nav-item:hover,.tag:hover{background:var(--primary);color:#fff}
+.tag.active{background:var(--primary);color:#fff}
+.main{flex:1;padding:10px}
+.search input{width:100%;padding:8px;border:1px solid var(--border);border-radius:6px;margin-bottom:10px}
+.grid{width:100%;border-collapse:collapse;background:var(--panel)}
+.grid th,.grid td{padding:8px;border-bottom:1px solid var(--border)}
+.bar{height:16px;background:var(--panel);border-radius:8px;overflow:hidden}
+.used{height:100%;background:linear-gradient(90deg,var(--primary),#8ec5ff);width:0%;transition:.5s}
+.toast{position:fixed;bottom:10px;right:10px}
+.toast div{background:var(--panel);padding:8px;border-radius:6px;margin-top:6px;border:1px solid var(--border)}
+</style>
 </head>
 <body>
-  <div class="topbar">
-    <div class="brand"><div class="logo">📁</div>SchoolWork NAS</div>
-    <div class="toolbar">
-      <button class="btn-primary" id="themeBtn">Thème: Clair</button>
-      <button class="btn-danger" id="logoutBtn">Déconnexion</button>
-    </div>
-  </div>
-
-  <div class="layout">
-    <aside class="sidebar">
-      <div class="nav-item" data-folder="maths">📐 Maths</div>
-      <div class="nav-item" data-folder="physique">⚡ Physique</div>
-      <div class="nav-item" data-folder="francais">🖋️ Français</div>
-      <div class="nav-item" data-folder="histoire">🏺 Histoire</div>
-      <div class="nav-item" data-folder="geo">🗺️ Géo</div>
-      <div class="tags">
-        <div class="tag" data-tag="devoir">Devoir</div>
-        <div class="tag" data-tag="cours">Cours</div>
-        <div class="tag" data-tag="images">Images</div>
-      </div>
-    </aside>
-
-    <main class="main">
-      <div class="search"><input id="search" type="text" placeholder="Rechercher un fichier..."></div>
-      <table class="grid" id="fileGrid">
-        <tr><th>Nom</th><th>Taille</th></tr>
-        <tr data-size="1.2 Mo" data-folder="maths" data-tags="devoir,cours"><td><a href="maths/Chapitre_1_Algebre.pdf">Chapitre_1_Algebre.pdf</a></td><td>1.2 Mo</td></tr>
-        <tr data-size="320 Ko" data-folder="maths" data-tags="cours"><td><a href="maths/Formulaire_2025.docx">Formulaire_2025.docx</a></td><td>320 Ko</td></tr>
-        <tr data-size="780 Ko" data-folder="physique" data-tags="devoir"><td><a href="physique/TP_Electricite.pdf">TP_Electricite.pdf</a></td><td>780 Ko</td></tr>
-        <tr data-size="2.4 Mo" data-folder="physique" data-tags="images"><td><a href="physique/Schema_moteur.png">Schema_moteur.png</a></td><td>2.4 Mo</td></tr>
-        <tr data-size="420 Ko" data-folder="francais" data-tags="devoir,cours"><td><a href="francais/Dissertation_Montaigne.docx">Dissertation_Montaigne.docx</a></td><td>420 Ko</td></tr>
-        <tr data-size="1.9 Mo" data-folder="histoire" data-tags="cours"><td><a href="histoire/Civilisations_Antiques.pdf">Civilisations_Antiques.pdf</a></td><td>1.9 Mo</td></tr>
-        <tr data-size="1.1 Mo" data-folder="geo" data-tags="images,cours"><td><a href="geo/Carte_population.png">Carte_population.png</a></td><td>1.1 Mo</td></tr>
-      </table>
-
-      <h3>Stockage global</h3>
-      <div class="bar"><div class="used" id="storageUsed"></div></div>
-      <p id="storageText"></p>
-      <div class="stats" id="stats"></div>
-    </main>
-  </div>
-
-  <div class="toast" id="toast"></div>
-
-  <script>
-    const rows = Array.from(document.querySelectorAll('#fileGrid tr[data-size]'));
-    let currentFolder=null, currentTag=null, searchTerm="";
-
-    function parseSizeToMo(str){
-      str=str.toLowerCase(); let num=parseFloat(str.replace(',','.'));
-      if(str
+<div class="topbar"><div class="logo">📁</div>SchoolWork NAS
+<div><button id="themeBtn">Thème</button><button id="logoutBtn">Déconnexion</button></div></div>
+<div class="layout">
+<aside class="sidebar">
+<div class="nav-item" data-folder="maths">Maths</div>
+<div class="nav-item" data-folder="physique">Physique</div>
+<div class="nav-item" data-folder="francais">Français</div>
+<div class="nav-item" data-folder="histoire">Histoire</div>
+<div class="nav-item" data-folder="geo">Géo</div>
+<div class="tag" data-tag="devoir">Devoir</div>
+<div class="tag" data-tag="cours">Cours</div>
+<div class="tag" data-tag="images">Images</div>
+</aside>
+<main class="main">
+<div class="search"><input id="search" placeholder="Rechercher..."></div>
+<table class="grid" id="fileGrid">
+<tr><th>Nom</th><th>Taille</th></tr>
+<tr data-size="1.2 Mo" data-folder="maths" data-tags="devoir,cours"><td><a href="maths/Chapitre_1_Algebre.pdf">Chapitre_1_Algebre.pdf</a></td><td>1.2 Mo</td></tr>
+<tr data-size="320 Ko" data-folder="maths" data-tags="cours"><td><a href="maths/Formulaire_2025.docx">Formulaire_2025.docx</a></td><td>320 Ko</td></tr>
+<tr data-size="780 Ko" data-folder="physique" data-tags="devoir"><td><a href="physique/TP_Electricite.pdf">TP_Electricite.pdf</a></td><td>780 Ko</td></tr>
+<tr data-size="2.4 Mo" data-folder="physique" data-tags="images"><td><a href="physique/Schema_moteur.png">Schema_moteur.png</a></td><td>2.4 Mo</td></tr>
+<tr data-size="420 Ko" data-folder="francais" data-tags="devoir,cours"><td><a href="francais/Dissertation_Montaigne.docx">Dissertation_Montaigne.docx</a></td><td>420 Ko</td></tr>
+<tr data-size="1.9 Mo" data-folder="histoire" data-tags="cours"><td><a href="histoire/Civilisations_Antiques.pdf">Civilisations_Antiques.pdf</a></td><td>1.9 Mo</td></tr>
+<tr data-size="1.1 Mo" data-folder="geo" data-tags="images,cours"><td><a href="geo/Carte_population.png">Carte_population.png</a></td><td>1.1 Mo</td></tr>
+</table>
+<h3>Stockage global</h3>
+<div class="bar"><div class="used" id="storageUsed"></div></div>
+<p id="storageText"></p>
+<div class="stats" id="stats"></div>
+</main></div>
+<div class="toast" id="toast"></div>
+<script>
+const rows=[...document.querySelectorAll('#fileGrid tr[data-size]')];let folder=null,tag=null,search="";
+function parseSize(s){s=s.toLowerCase();let n=parseFloat(s.replace(',','.'));return s.includes('ko')?n/1000:n}
+function update(){let used=0,visible=0;rows.forEach(r=>{let ok=(!folder||r.dataset.folder===folder)&&(!tag||r.dataset.tags.includes(tag))&&(!search||r.textContent.toLowerCase().includes(search));r.style.display=ok?"":"none";if(ok){visible++;used+=parseSize(r.dataset.size)}});let pct=Math.min(100,(used/1000)*100);storageUsed.style.width=pct+"%";storageText.textContent=`${used.toFixed(1)} Mo utilisés / 1 Go`;stats.textContent=`${visible} fichiers visibles`}
+document.querySelectorAll('.nav-item').forEach(n=>n.onclick=()=>{folder=n.dataset.folder;update()})
+document.querySelectorAll('.tag').forEach(t=>t.onclick=()=>{tag=tag===t.dataset.tag?null:t.dataset.tag;document.querySelectorAll('.tag').forEach(x=>x.classList.remove('active'));if(tag)t.classList.add('active');update()})
+search=document.getElementById('search');search.oninput=()=>{search=search.value.toLowerCase();update()}
+function toast(m){let d=document.createElement("div");d.textContent=m;toast.appendChild(d);setTimeout(()=>d.style.opacity=0,2000);setTimeout(()=>d.remove(),2500)}
+document.getElementById('themeBtn').onclick=()=>{let m=document.documentElement.getAttribute("data-theme")==="dark"?"light":"dark";document.documentElement.setAttribute("data-theme",m)}
+document.getElementById('logoutBtn').onclick=()=>{localStorage.removeItem("sw_logged_in");location.href="login.html"}
+update();toast("Bienvenue sur ton NAS !")
+</script>
+</body>
+</html>
