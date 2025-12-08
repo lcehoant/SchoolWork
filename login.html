@@ -2,29 +2,90 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <title>Connexion</title>
+  <title>SchoolWork — Connexion</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    :root {
+      --bg:#f5f7fb; --panel:#ffffff; --panel-2:#f8fafc; --text:#1f2a3a; --muted:#6d7c90;
+      --primary:#2d89ef; --primary-700:#236dc0; --border:#e5e9f2; --danger:#e74c3c; --ok:#27ae60;
+      --shadow:0 14px 40px rgba(18,38,60,.10);
+    }
+    html[data-theme="dark"] {
+      --bg:#0b1020; --panel:#121831; --panel-2:#0f1530; --text:#eaf2ff; --muted:#93a0b5;
+      --primary:#2d89ef; --primary-700:#236dc0; --border:#1c2440; --danger:#ff6b6b; --ok:#49d189;
+      --shadow:0 20px 60px rgba(0,0,0,.35);
+    }
+    body {margin:0; font-family:system-ui,Segoe UI,Roboto,Arial; background:var(--bg); color:var(--text);
+      display:flex; justify-content:center; align-items:center; height:100vh;}
+    .card {background:var(--panel); border:1px solid var(--border); border-radius:14px;
+      padding:28px; width:min(92vw,400px); box-shadow:var(--shadow);}
+    h2 {margin-top:0; text-align:center;}
+    .field {margin:12px 0;}
+    .field label {display:block; font-size:13px; color:var(--muted); margin-bottom:6px;}
+    .field input {width:100%; padding:12px; border:1px solid var(--border); border-radius:10px;
+      background:var(--panel-2); color:var(--text);}
+    .actions {display:flex; gap:10px; margin-top:16px;}
+    .btn {flex:1; padding:12px; border:none; border-radius:10px; cursor:pointer;}
+    .btn-primary {background:var(--primary); color:#fff;}
+    .btn-secondary {background:var(--panel-2); color:var(--text);}
+    .msg {margin-top:12px; font-size:13px; min-height:18px;}
+    a {color:var(--primary);}
+  </style>
 </head>
 <body>
-  <h2>Connexion</h2>
-  <input id="username" placeholder="Nom d'utilisateur">
-  <input id="password" type="password" placeholder="Mot de passe">
-  <button onclick="login()">Se connecter</button>
-  <p><a href="register.html">Créer un compte</a></p>
-  <p id="error"></p>
+  <div class="card">
+    <h2>Connexion</h2>
+    <div class="field">
+      <label>Nom d’utilisateur</label>
+      <input id="username" type="text" placeholder="ex: leon">
+    </div>
+    <div class="field">
+      <label>Mot de passe</label>
+      <input id="password" type="password" placeholder="••••">
+    </div>
+    <div class="actions">
+      <button class="btn btn-primary" id="loginBtn">Se connecter</button>
+      <button class="btn btn-secondary" id="registerBtn">Créer un compte</button>
+    </div>
+    <div class="msg" id="msg"></div>
+    <p style="text-align:center; margin-top:10px;">
+      <a href="register.html">Inscription avancée</a>
+    </p>
+  </div>
 
   <script>
-    let users = JSON.parse(localStorage.getItem("users")) || {};
-
-    function login(){
-      const u = username.value.trim();
-      const p = password.value;
-      if(users[u] && users[u] === p){
-        localStorage.setItem("sw_logged_in","1");
-        window.location.href="nas.html";
-      }else{
-        error.textContent="Identifiants incorrects";
-      }
+    function getUsers(){
+      try { return JSON.parse(localStorage.getItem("users")) || {}; }
+      catch(e){ return {}; }
     }
+    function setSession(user){
+      localStorage.setItem("sw_logged_in","1");
+      localStorage.setItem("sw_user",user);
+    }
+
+    document.getElementById("loginBtn").onclick = ()=>{
+      const u = document.getElementById("username").value.trim().toLowerCase();
+      const p = document.getElementById("password").value;
+      const users = getUsers();
+      if(users[u] && users[u]===p){
+        setSession(u);
+        window.location.href="nas.html";
+      } else {
+        document.getElementById("msg").style.color="var(--danger)";
+        document.getElementById("msg").textContent="Identifiants incorrects.";
+      }
+    };
+
+    document.getElementById("registerBtn").onclick = ()=>{
+      const u = document.getElementById("username").value.trim().toLowerCase();
+      const p = document.getElementById("password").value;
+      const msg = document.getElementById("msg");
+      if(!u || !p){ msg.style.color="var(--danger)"; msg.textContent="Nom et mot de passe requis."; return; }
+      const users = getUsers();
+      if(users[u]){ msg.style.color="var(--danger)"; msg.textContent="Ce compte existe déjà."; return; }
+      users[u]=p; localStorage.setItem("users",JSON.stringify(users));
+      msg.style.color="var(--ok)"; msg.textContent="Compte créé ! Vous pouvez vous connecter.";
+    };
   </script>
 </body>
 </html>
