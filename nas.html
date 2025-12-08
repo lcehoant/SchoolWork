@@ -28,13 +28,19 @@
     .sidebar {width:220px; background:var(--panel); border:1px solid var(--border); border-radius:12px; padding:12px;}
     .nav-item {padding:8px; border-radius:8px; cursor:pointer;}
     .nav-item:hover {background:var(--panel-2);}
+    .tags {margin-top:12px;}
+    .tag {display:inline-block; margin:4px; padding:6px 10px; border:1px solid var(--border); border-radius:999px; cursor:pointer; font-size:12px;}
+    .tag.active {background:var(--primary); color:#fff;}
     .main {flex:1; margin-left:16px;}
     .grid {width:100%; border-collapse:collapse; background:var(--panel); border-radius:12px; overflow:hidden;}
     .grid th, .grid td {padding:10px; border-bottom:1px solid var(--border);}
     .bar {width:100%; height:18px; background:var(--panel-2); border-radius:999px; overflow:hidden;}
-    .bar .used {height:100%; background:linear-gradient(135deg,var(--primary),#8ec5ff); width:0%;}
+    .bar .used {height:100%; background:linear-gradient(135deg,var(--primary),#8ec5ff); width:0%; transition:width .6s ease;}
     .toast {position:fixed; bottom:16px; right:16px;}
-    .toast div {background:var(--panel); border:1px solid var(--border); border-radius:8px; padding:10px; margin-top:6px; box-shadow:var(--shadow);}
+    .toast div {background:var(--panel); border:1px solid var(--border); border-radius:8px; padding:10px; margin-top:6px; box-shadow:var(--shadow); opacity:1; transition:opacity .5s;}
+    .stats {margin-top:12px; font-size:14px; color:var(--muted);}
+    .search {margin-bottom:12px;}
+    .search input {width:100%; padding:10px; border:1px solid var(--border); border-radius:8px; background:var(--panel-2);}
   </style>
 </head>
 <body>
@@ -53,65 +59,39 @@
       <div class="nav-item" data-folder="francais">🖋️ Français</div>
       <div class="nav-item" data-folder="histoire">🏺 Histoire</div>
       <div class="nav-item" data-folder="geo">🗺️ Géo</div>
+      <div class="tags">
+        <div class="tag" data-tag="devoir">Devoir</div>
+        <div class="tag" data-tag="cours">Cours</div>
+        <div class="tag" data-tag="images">Images</div>
+      </div>
     </aside>
 
     <main class="main">
-      <h3>Fichiers</h3>
+      <div class="search"><input id="search" type="text" placeholder="Rechercher un fichier..."></div>
       <table class="grid" id="fileGrid">
         <tr><th>Nom</th><th>Taille</th></tr>
-        <tr data-size="1.2 Mo" data-folder="maths"><td><a href="maths/Chapitre_1_Algebre.pdf">Chapitre_1_Algebre.pdf</a></td><td>1.2 Mo</td></tr>
-        <tr data-size="320 Ko" data-folder="maths"><td><a href="maths/Formulaire_2025.docx">Formulaire_2025.docx</a></td><td>320 Ko</td></tr>
-        <tr data-size="780 Ko" data-folder="physique"><td><a href="physique/TP_Electricite.pdf">TP_Electricite.pdf</a></td><td>780 Ko</td></tr>
-        <tr data-size="2.4 Mo" data-folder="physique"><td><a href="physique/Schema_moteur.png">Schema_moteur.png</a></td><td>2.4 Mo</td></tr>
-        <tr data-size="420 Ko" data-folder="francais"><td><a href="francais/Dissertation_Montaigne.docx">Dissertation_Montaigne.docx</a></td><td>420 Ko</td></tr>
-        <tr data-size="1.9 Mo" data-folder="histoire"><td><a href="histoire/Civilisations_Antiques.pdf">Civilisations_Antiques.pdf</a></td><td>1.9 Mo</td></tr>
-        <tr data-size="1.1 Mo" data-folder="geo"><td><a href="geo/Carte_population.png">Carte_population.png</a></td><td>1.1 Mo</td></tr>
+        <tr data-size="1.2 Mo" data-folder="maths" data-tags="devoir,cours"><td><a href="maths/Chapitre_1_Algebre.pdf">Chapitre_1_Algebre.pdf</a></td><td>1.2 Mo</td></tr>
+        <tr data-size="320 Ko" data-folder="maths" data-tags="cours"><td><a href="maths/Formulaire_2025.docx">Formulaire_2025.docx</a></td><td>320 Ko</td></tr>
+        <tr data-size="780 Ko" data-folder="physique" data-tags="devoir"><td><a href="physique/TP_Electricite.pdf">TP_Electricite.pdf</a></td><td>780 Ko</td></tr>
+        <tr data-size="2.4 Mo" data-folder="physique" data-tags="images"><td><a href="physique/Schema_moteur.png">Schema_moteur.png</a></td><td>2.4 Mo</td></tr>
+        <tr data-size="420 Ko" data-folder="francais" data-tags="devoir,cours"><td><a href="francais/Dissertation_Montaigne.docx">Dissertation_Montaigne.docx</a></td><td>420 Ko</td></tr>
+        <tr data-size="1.9 Mo" data-folder="histoire" data-tags="cours"><td><a href="histoire/Civilisations_Antiques.pdf">Civilisations_Antiques.pdf</a></td><td>1.9 Mo</td></tr>
+        <tr data-size="1.1 Mo" data-folder="geo" data-tags="images,cours"><td><a href="geo/Carte_population.png">Carte_population.png</a></td><td>1.1 Mo</td></tr>
       </table>
 
       <h3>Stockage global</h3>
       <div class="bar"><div class="used" id="storageUsed"></div></div>
       <p id="storageText"></p>
+      <div class="stats" id="stats"></div>
     </main>
   </div>
 
   <div class="toast" id="toast"></div>
 
   <script>
+    const rows = Array.from(document.querySelectorAll('#fileGrid tr[data-size]'));
+    let currentFolder=null, currentTag=null, searchTerm="";
+
     function parseSizeToMo(str){
       str=str.toLowerCase(); let num=parseFloat(str.replace(',','.'));
-      if(str.includes('ko')) return num/1000; return num;
-    }
-    function updateStorage(){
-      const rows=document.querySelectorAll('#fileGrid tr[data-size]');
-      let used=0; rows.forEach(r=>{used+=parseSizeToMo(r.dataset.size);});
-      const total=1000; const pct=Math.min(100,(used/total)*100);
-      document.getElementById('storageUsed').style.width=pct+"%";
-      document.getElementById('storageText').textContent=`${used.toFixed(1)} Mo utilisés sur 1 Go`;
-    }
-    updateStorage();
-
-    // Thème clair/sombre
-    const themeBtn=document.getElementById('themeBtn');
-    function setTheme(mode){
-      document.documentElement.setAttribute('data-theme',mode);
-      themeBtn.textContent="Thème: "+(mode==="dark"?"Sombre":"Clair");
-      localStorage.setItem("sw_theme",mode);
-    }
-    themeBtn.onclick=()=>{setTheme(document.documentElement.getAttribute("data-theme")==="dark"?"light":"dark");};
-    if(localStorage.getItem("sw_theme")==="dark") setTheme("dark");
-
-    // Déconnexion
-    document.getElementById('logoutBtn').onclick=()=>{
-      localStorage.removeItem("sw_logged_in"); window.location.href="login.html";
-    };
-
-    // Toast helper
-    function toastMsg(msg){
-      const t=document.createElement("div"); t.textContent=msg;
-      document.getElementById("toast").appendChild(t);
-      setTimeout(()=>t.remove(),2500);
-    }
-    toastMsg("Bienvenue sur ton NAS !");
-  </script>
-</body>
-</html>
+      if(str
