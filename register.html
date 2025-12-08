@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Créer un compte</title>
+</head>
+<body>
+  <h2>Inscription</h2>
+  <input id="newUser" placeholder="Nom d'utilisateur">
+  <input id="newPass" type="password" placeholder="Mot de passe">
+  <button onclick="register()">Créer</button>
+  <p id="msg"></p>
+
+  <script>
+    let users = JSON.parse(localStorage.getItem("users")) || {};
+
+    function register(){
+      const u = newUser.value.trim();
+      const p = newPass.value;
+      if(!u || !p){ msg.textContent="Nom et mot de passe requis"; return; }
+      if(users[u]){ msg.textContent="Ce compte existe déjà"; return; }
+      users[u]=p;
+      localStorage.setItem("users",JSON.stringify(users));
+      msg.style.color="green";
+      msg.textContent="Compte créé avec succès !";
+    }
+  </script>
+</body>
+</html>
