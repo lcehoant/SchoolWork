@@ -23,33 +23,38 @@ body{margin:0;font-family:system-ui;background:var(--bg);color:var(--text)}
 .toast{position:fixed;bottom:10px;right:10px}
 .toast div{background:var(--panel);padding:8px;border-radius:6px;margin-top:6px;border:1px solid var(--border)}
 .stats{margin-top:10px;font-size:14px;color:var(--muted)}
+.badge{padding:2px 6px;border-radius:6px;font-size:12px}
+.ok{background:var(--accent);color:#fff}
+.todo{background:var(--danger);color:#fff}
 </style>
 </head>
 <body>
 <div class="topbar"><div class="logo">📁</div>SchoolWork NAS Pro
-<div><button id="themeBtn">Thème</button><button id="logoutBtn">Déconnexion</button></div></div>
+<div><span id="user">👤 Léon</span><button id="themeBtn">🌙/☀️</button><button id="logoutBtn">Déconnexion</button></div></div>
 <div class="layout">
 <aside class="sidebar">
-<div class="nav-item" data-folder="maths">Maths</div>
-<div class="nav-item" data-folder="physique">Physique</div>
-<div class="nav-item" data-folder="francais">Français</div>
-<div class="nav-item" data-folder="histoire">Histoire</div>
-<div class="nav-item" data-folder="geo">Géo</div>
-<div class="tag" data-tag="devoir">Devoir</div>
-<div class="tag" data-tag="cours">Cours</div>
-<div class="tag" data-tag="images">Images</div>
+<h4>Dossiers</h4>
+<div class="nav-item" data-folder="maths">📐 Maths</div>
+<div class="nav-item" data-folder="physique">⚡ Physique</div>
+<div class="nav-item" data-folder="francais">🖋️ Français</div>
+<div class="nav-item" data-folder="histoire">🏺 Histoire</div>
+<div class="nav-item" data-folder="geo">🗺️ Géo</div>
+<h4>Tags</h4>
+<div class="tag" data-tag="devoir">📝 Devoir</div>
+<div class="tag" data-tag="cours">📚 Cours</div>
+<div class="tag" data-tag="images">🖼️ Images</div>
 </aside>
 <main class="main">
-<div class="search"><input id="search" placeholder="Rechercher..."></div>
+<div class="search"><input id="search" placeholder="🔍 Rechercher..."></div>
 <table class="grid" id="fileGrid">
 <tr><th>Nom</th><th>Taille</th><th>Date</th><th>État</th></tr>
-<tr data-size="1.2 Mo" data-folder="maths" data-tags="devoir,cours"><td><a href="maths/Chapitre_1_Algebre.pdf">Chapitre_1_Algebre.pdf</a></td><td>1.2 Mo</td><td>01/12/25</td><td>✅</td></tr>
-<tr data-size="320 Ko" data-folder="maths" data-tags="cours"><td><a href="maths/Formulaire_2025.docx">Formulaire_2025.docx</a></td><td>320 Ko</td><td>02/12/25</td><td>⏳</td></tr>
-<tr data-size="780 Ko" data-folder="physique" data-tags="devoir"><td><a href="physique/TP_Electricite.pdf">TP_Electricite.pdf</a></td><td>780 Ko</td><td>03/12/25</td><td>✅</td></tr>
-<tr data-size="2.4 Mo" data-folder="physique" data-tags="images"><td><a href="physique/Schema_moteur.png">Schema_moteur.png</a></td><td>2.4 Mo</td><td>04/12/25</td><td>⏳</td></tr>
-<tr data-size="420 Ko" data-folder="francais" data-tags="devoir,cours"><td><a href="francais/Dissertation_Montaigne.docx">Dissertation_Montaigne.docx</a></td><td>420 Ko</td><td>05/12/25</td><td>✅</td></tr>
-<tr data-size="1.9 Mo" data-folder="histoire" data-tags="cours"><td><a href="histoire/Civilisations_Antiques.pdf">Civilisations_Antiques.pdf</a></td><td>1.9 Mo</td><td>06/12/25</td><td>⏳</td></tr>
-<tr data-size="1.1 Mo" data-folder="geo" data-tags="images,cours"><td><a href="geo/Carte_population.png">Carte_population.png</a></td><td>1.1 Mo</td><td>07/12/25</td><td>✅</td></tr>
+<tr data-size="1.2 Mo" data-folder="maths" data-tags="devoir,cours"><td>Chapitre_1_Algebre.pdf</td><td>1.2 Mo</td><td>01/12/25</td><td><span class="badge ok">Terminé</span></td></tr>
+<tr data-size="320 Ko" data-folder="maths" data-tags="cours"><td>Formulaire_2025.docx</td><td>320 Ko</td><td>02/12/25</td><td><span class="badge todo">À faire</span></td></tr>
+<tr data-size="780 Ko" data-folder="physique" data-tags="devoir"><td>TP_Electricite.pdf</td><td>780 Ko</td><td>03/12/25</td><td><span class="badge ok">Terminé</span></td></tr>
+<tr data-size="2.4 Mo" data-folder="physique" data-tags="images"><td>Schema_moteur.png</td><td>2.4 Mo</td><td>04/12/25</td><td><span class="badge todo">À faire</span></td></tr>
+<tr data-size="420 Ko" data-folder="francais" data-tags="devoir,cours"><td>Dissertation_Montaigne.docx</td><td>420 Ko</td><td>05/12/25</td><td><span class="badge ok">Terminé</span></td></tr>
+<tr data-size="1.9 Mo" data-folder="histoire" data-tags="cours"><td>Civilisations_Antiques.pdf</td><td>1.9 Mo</td><td>06/12/25</td><td><span class="badge todo">À faire</span></td></tr>
+<tr data-size="1.1 Mo" data-folder="geo" data-tags="images,cours"><td>Carte_population.png</td><td>1.1 Mo</td><td>07/12/25</td><td><span class="badge ok">Terminé</span></td></tr>
 </table>
 <h3>Stockage global</h3>
 <div class="bar"><div class="used" id="storageUsed"></div></div>
